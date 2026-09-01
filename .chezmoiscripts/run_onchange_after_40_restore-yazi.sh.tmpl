@@ -13,6 +13,22 @@ fail() {
     exit 1
 }
 
+tool_version() {
+    "$1" --version | awk '
+        {
+            for (i = 1; i <= NF; i++) {
+                candidate = $i
+                sub(/^[^0-9]*/, "", candidate)
+                sub(/[^0-9.].*$/, "", candidate)
+                if (candidate ~ /^[0-9]+[.][0-9]+([.][0-9]+)?$/) {
+                    print candidate
+                    exit
+                }
+            }
+        }
+    '
+}
+
 missing=""
 for command_name in awk ya yazi; do
     command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
@@ -20,9 +36,10 @@ done
 [ -z "$missing" ] || fail "missing required commands:$missing"
 [ -f "$package_file" ] || fail "missing $package_file"
 
-yazi_version=$(yazi --version | awk '/Version:/ { print $2; exit }')
-ya_version=$(ya --version | awk '/Version:/ { print $2; exit }')
+yazi_version=$(tool_version yazi)
+ya_version=$(tool_version ya)
 [ -n "$yazi_version" ] || fail "could not determine Yazi version"
+[ -n "$ya_version" ] || fail "could not determine Ya version"
 [ "$yazi_version" = "$ya_version" ] || fail "Yazi ($yazi_version) and Ya ($ya_version) versions differ"
 
 YAZI_CONFIG_HOME="$yazi_home" ya pkg install

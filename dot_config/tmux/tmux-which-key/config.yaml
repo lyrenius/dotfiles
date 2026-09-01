@@ -1,0 +1,167 @@
+# yaml-language-server: $schema=config.schema.yaml
+
+command_alias_start_index: 300
+
+keybindings:
+  root_table: C-a
+  prefix_table: Space
+
+title:
+  style: fg=#D9D9D9,align=centre,bold
+  prefix: "󰆍 tmux"
+  prefix_style: fg=#80CBC4,align=centre,bold
+
+# Match LazyVim which-key: anchor the menu to the lower-right corner,
+# directly above tmux's bottom status line.
+position:
+  x: R
+  y: S
+
+custom_variables: []
+
+macros:
+  - name: reload-config
+    commands:
+      - display-message "Reloading tmux config..."
+      - source-file ~/.config/tmux/tmux.conf
+      - display-message "tmux config reloaded"
+
+items:
+  - name: "󰖲  New window"
+    key: c
+    command: 'new-window -c #{pane_current_path}'
+
+  - name: "  Split right"
+    key: '|'
+    command: 'split-window -h -c #{pane_current_path}'
+
+  - name: "  Split down"
+    key: '-'
+    command: 'split-window -v -c #{pane_current_path}'
+
+  - name: "󰙅  Sessions / projects"
+    key: s
+    command: 'display-popup -E -w 80% -h 70% -d "#{pane_current_path}" -T " Sessions " "sesh picker -i"'
+
+  - separator: true
+
+  - name: "󰖲  +windows"
+    key: w
+    menu:
+      - name: "󰒅  Choose"
+        key: w
+        command: choose-tree -Zw
+      - name: "󰐕  New"
+        key: c
+        command: 'new-window -c #{pane_current_path}'
+      - name: "󰒮  Previous"
+        key: p
+        command: previous-window
+      - name: "󰒭  Next"
+        key: n
+        command: next-window
+      - name: "󰑕  Rename"
+        key: r
+        command: 'command-prompt -p "Rename window:" -I "#W" "rename-window -- \"%%\""'
+      - name: "󰅖  Close"
+        key: x
+        command: 'confirm-before -p "Close window #W? (y/n)" kill-window'
+
+  - name: "  +panes"
+    key: p
+    menu:
+      - name: "  Split right"
+        key: '|'
+        command: 'split-window -h -c #{pane_current_path}'
+      - name: "  Split down"
+        key: '-'
+        command: 'split-window -v -c #{pane_current_path}'
+      - separator: true
+      - name: "󰁝  Left"
+        key: h
+        command: select-pane -L
+      - name: "󰁅  Down"
+        key: j
+        command: select-pane -D
+      - name: "󰁞  Up"
+        key: k
+        command: select-pane -U
+      - name: "󰁔  Right"
+        key: l
+        command: select-pane -R
+      - name: "󰊓  Zoom"
+        key: z
+        command: resize-pane -Z
+      - name: "󰩨  +resize"
+        key: r
+        menu:
+          - name: "󰁝  Left"
+            key: h
+            command: resize-pane -L 3
+            transient: true
+          - name: "󰁅  Down"
+            key: j
+            command: resize-pane -D 3
+            transient: true
+          - name: "󰁞  Up"
+            key: k
+            command: resize-pane -U 3
+            transient: true
+          - name: "󰁔  Right"
+            key: l
+            command: resize-pane -R 3
+            transient: true
+          - name: "󰁝  Left ×10"
+            key: H
+            command: resize-pane -L 10
+            transient: true
+          - name: "󰁅  Down ×10"
+            key: J
+            command: resize-pane -D 10
+            transient: true
+          - name: "󰁞  Up ×10"
+            key: K
+            command: resize-pane -U 10
+            transient: true
+          - name: "󰁔  Right ×10"
+            key: L
+            command: resize-pane -R 10
+            transient: true
+      - name: "󰅖  Close"
+        key: x
+        command: 'confirm-before -p "Close pane #P? (y/n)" kill-pane'
+
+  - name: "󰦛  +resurrect"
+    key: R
+    menu:
+      - name: "󰆓  Save environment"
+        key: s
+        command: 'run-shell ~/.config/tmux/plugins/tmux-resurrect/scripts/save.sh'
+      - name: "󰁯  Restore last environment"
+        key: r
+        command: 'run-shell ~/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh'
+      - name: "  Open snapshot directory"
+        key: o
+        command: 'run-shell "open ~/.local/state/tmux/resurrect"'
+
+  - separator: true
+
+  - name: "󰆏  Copy mode"
+    key: '['
+    command: copy-mode
+
+  - name: "󰑐  Reload config"
+    key: r
+    macro: reload-config
+
+  - name: "󰈆  Detach"
+    key: d
+    command: detach-client
+
+  - name: "󰌌  Send literal Ctrl-a"
+    key: a
+    command: send-keys C-a
+
+  - name: "󰋖  All bindings"
+    key: '?'
+    command: list-keys -N

@@ -1,0 +1,87 @@
+{
+    "pragma": {
+        "prefix": "pragma",
+        "body": [
+            "#pragma GCC optimize(\"Ofast\", \"inline\", \"-ffast-math\")",
+            "#pragma GCC target(\"avx,sse2,sse3,sse4,mmx\")"
+        ]
+    },
+    "main": {
+        "prefix": "lyreqwq",
+        "body": [
+            "#include <bits/stdc++.h>",
+            "",
+            "using namespace std;",
+            "",
+            "namespace lyre {",
+            "    namespace test_case {",
+            "        void main() {",
+            "            $0",
+            "        }",
+            "    }",
+            "    void main() {",
+            "        ios::sync_with_stdio(false);",
+            "        cin.tie(nullptr);",
+            "        int t; cin >> t;",
+            "        for (int i = 0; i < t; ++i)",
+            "            test_case::main();",
+            "    }",
+            "}",
+            "",
+            "int main() { lyre::main(); }"
+        ]
+    },
+    "barrett": {
+        "prefix": "barrett",
+        "body": [
+            "struct barrett {",
+            "    int64_t p, m;",
+            "    constexpr barrett(int64_t p) : p(p), m((__int128_t(1) << 64) / p) {}",
+            "    constexpr int64_t operator()(int64_t x) const {",
+            "        x -= ((__int128_t(x) * m) >> 64) * p;",
+            "        return x >= p ? x - p : x;",
+            "    }",
+            "};"
+        ]
+    },
+    "power": {
+        "prefix": "power",
+        "body": [
+            "constexpr int pow(int a, int n) {",
+            "    auto r = 1;",
+            "    while (n) {",
+            "        r = 1l * r * (n & 1 ? a : 1) % P;",
+            "        n >>= 1, a = 1l * a * a % P;",
+            "    }",
+            "    return r;",
+            "}",
+            "constexpr int inv(int a) {",
+            "    return pow(a, P - 2);",
+            "}",
+            "constexpr int& add(int &a, int b) {",
+            "    return a = (a += b) >= P ? a - P : a;",
+            "}",
+            "constexpr int& sub(int &a, int b) {",
+            "    return a = (a -= b) < 0 ? a + P : a;",
+            "}"
+        ]
+    },
+    "factorial": {
+        "prefix": "factorial",
+        "body": [
+            "fact[0] = 1;",
+            "for (int i = 1; i <= n; ++i) fact[i] = 1l * fact[i - 1] * i % P;",
+            "factinv[n] = inv(fact[n]);",
+            "for (int i = n; i >= 1; --i) factinv[i - 1] = 1l * factinv[i] * i % P;"
+        ]
+    },
+    "binomial": {
+        "prefix": "binomial",
+        "body": [
+            "int binom(int n, int m) {",
+            "    if (min(n, m) < 0 || n < m) return 0;",
+            "    return 1l * fact[n] * factinv[m] % P * factinv[n - m] % P;",
+            "}"
+        ]
+    }
+}

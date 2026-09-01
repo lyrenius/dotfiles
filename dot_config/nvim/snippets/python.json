@@ -1,0 +1,22 @@
+{
+    "checker": {
+        "prefix": "checker",
+        "body": [
+            "from os import system",
+            "",
+            "foo, bar = 'foo', 'bar'",
+            "test_case = 50",
+            "",
+            "for t in range(test_case):",
+            "    system('python3 gen.py > inf')",
+            "    system(f'./{foo} < inf > ouf')",
+            "    system(f'./{bar} < inf > ans')",
+            "    if system('diff ouf ans -bB'):",
+            "        print(f'Wrong Answer on #{t}!')",
+            "        break",
+            "    print(f'Right Output #{t}!')",
+            "    system('rm inf ouf ans')",
+            ""
+        ]
+    }
+}

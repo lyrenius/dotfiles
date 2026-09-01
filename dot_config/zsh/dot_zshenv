@@ -1,0 +1,37 @@
+# XDG base directories. Keep this file limited to environment and path setup;
+# it is sourced by every zsh invocation, including non-interactive shells.
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# Tool homes.
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export GROK_HOME="$XDG_DATA_HOME/grok"
+
+# Persistent shell state and generated caches.
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-${HOST}-${ZSH_VERSION}"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
+export P10K_DUMP_FILE="$XDG_CACHE_HOME/zsh/p10k-dump-lyre.zsh"
+export P10K_INSTANT_PROMPT_FILE="$XDG_CACHE_HOME/zsh/p10k-instant-prompt-lyre.zsh"
+export SHELL_SESSIONS_DISABLE=1
+
+# User-wide command defaults.
+export SSH_AUTH_SOCK="/opt/homebrew/var/run/yubikey-agent.sock"
+export EDITOR="nvim"
+export LANG="en_US.UTF-8"
+
+# Keep Rust proxies and cargo-installed binaries available without duplicating
+# entries each time a nested shell starts.
+typeset -U path PATH
+path=(
+  "/opt/homebrew/opt/rustup/bin"
+  "$CARGO_HOME/bin"
+  $path
+)
+export PATH

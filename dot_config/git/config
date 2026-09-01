@@ -1,0 +1,6 @@
+[user]
+	name = lyrenius
+	email = njb25@mails.tsinghua.edu.cn
+	signingkey = 71A4E9AA41EDE2238BA708624BF0FDA2455CE97C
+[init]
+	defaultBranch = main

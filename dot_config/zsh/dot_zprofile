@@ -1,0 +1,19 @@
+# Login-shell integrations and PATH additions.
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Added by OrbStack: command-line tools and integration.
+if [[ -r "$HOME/.orbstack/shell/init.zsh" ]]; then
+  source "$HOME/.orbstack/shell/init.zsh" 2>/dev/null || :
+fi
+
+# JetBrains Toolbox command-line launchers. Toolbox added this to ~/.zprofile.
+path+=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts")
+typeset -U path PATH
+export PATH
+
+# Expose mise-managed tools to login shells via shims
+if [[ -x /opt/homebrew/bin/mise ]]; then
+  eval "$(/opt/homebrew/bin/mise activate zsh --shims)"
+fi

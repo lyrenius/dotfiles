@@ -1,0 +1,45 @@
+# ------------------------------
+# 1. Powerlevel10k instant prompt
+# ------------------------------
+# Keep this near the top, before startup code that may perform console I/O.
+if [[ -r "$P10K_INSTANT_PROMPT_FILE" ]]; then
+  source "$P10K_INSTANT_PROMPT_FILE"
+fi
+
+# ------------------------------
+# 2. Oh My Zsh and prompt
+# ------------------------------
+export ZSH="$XDG_DATA_HOME/oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# YubiKey provides SSH_AUTH_SOCK, so loading Oh My Zsh's ssh-agent plugin would
+# start a second agent and then immediately replace its socket.
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zoxide copypath copyfile colored-man-pages)
+
+if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  print -u2 -- "zsh: Oh My Zsh not found at $ZSH"
+fi
+
+[[ -r "$ZDOTDIR/.p10k.zsh" ]] && source "$ZDOTDIR/.p10k.zsh"
+
+# ------------------------------
+# 3. Modern aliases
+# ------------------------------
+alias ls='eza --icons=always --color=always'
+alias ll='eza -lh --icons=always --color=always'
+alias la='eza -lah --icons=always --color=always'
+alias tree='eza --tree --icons=always'
+alias cat='bat --style=plain'
+alias vim='nvim'
+
+# ------------------------------
+# 4. Interactive tool integrations
+# ------------------------------
+if (( $+commands[fzf] )); then
+  eval "$(fzf --zsh)"
+fi
+
+[[ -r "$ZDOTDIR/integrations/80-mise.zsh" ]] && source "$ZDOTDIR/integrations/80-mise.zsh"
+[[ -r "$ZDOTDIR/integrations/90-conda.zsh" ]] && source "$ZDOTDIR/integrations/90-conda.zsh"

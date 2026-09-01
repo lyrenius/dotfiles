@@ -1,0 +1,23 @@
+# --- Ghostty Font Configuration ---
+
+font-family = "Maple Mono NF CN"
+font-size = 14
+font-feature = calt
+font-feature = liga
+
+# --- Cursor Configuration ---
+
+cursor-style = block_hollow
+
+# --- Remote Shell Integration ---
+
+shell-integration = detect
+shell-integration-features = no-cursor,ssh-env,ssh-terminfo,no-sudo
+
+# --- Mouse Control Configuration ---
+
+mouse-shift-capture = never
+
+# --- Background Configuration
+
+background-opacity = 0.95

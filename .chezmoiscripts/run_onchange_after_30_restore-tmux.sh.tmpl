@@ -19,10 +19,13 @@ fail() {
 }
 
 missing=""
-for command_name in awk eza fzf git python3 sesh sort tmux tr zoxide zsh; do
+for command_name in awk eza fzf git python3 sesh sort tmux tr zoxide; do
     command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
 done
 [ -z "$missing" ] || fail "missing required commands:$missing"
+if [ -n "${SHELL:-}" ] && [ ! -x "$SHELL" ]; then
+    fail "SHELL is not executable: $SHELL"
+fi
 
 [ -f "$tmux_conf" ] || fail "missing $tmux_conf"
 [ -f "$lock_file" ] || fail "missing $lock_file"

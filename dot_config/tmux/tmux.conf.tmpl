@@ -1,3 +1,7 @@
+{{- $defaultShell := env "SHELL" -}}
+{{- if not $defaultShell -}}
+{{- $defaultShell = lookPath "sh" -}}
+{{- end -}}
 # Modern tmux configuration for Ghostty, LazyVim, macOS, and Linux.
 
 # Terminal capabilities
@@ -14,7 +18,7 @@ set -ga update-environment TERM_PROGRAM
 
 # General behavior
 set-environment -g TMUX_PLUGIN_MANAGER_PATH "{{ joinPath .chezmoi.homeDir ".config/tmux/plugins" }}/"
-set -g default-shell "{{ lookPath "zsh" }}"
+set -g default-shell "{{ $defaultShell }}"
 set -g mouse on
 set -g history-limit 100000
 set -g display-time 2000

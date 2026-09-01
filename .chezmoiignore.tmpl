@@ -1,0 +1,4 @@
+{{- if ne (env "SHELL" | base) "zsh" }}
+.zshenv
+.config/zsh
+{{- end -}}

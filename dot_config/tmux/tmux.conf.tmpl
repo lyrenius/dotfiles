@@ -1,4 +1,4 @@
-# Modern tmux configuration for Ghostty, LazyVim, and macOS.
+# Modern tmux configuration for Ghostty, LazyVim, macOS, and Linux.
 
 # Terminal capabilities
 set -g default-terminal "tmux-256color"
@@ -13,7 +13,8 @@ set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 
 # General behavior
-set -g default-shell "/bin/zsh"
+set-environment -g TMUX_PLUGIN_MANAGER_PATH "{{ joinPath .chezmoi.homeDir ".config/tmux/plugins" }}/"
+set -g default-shell "{{ lookPath "zsh" }}"
 set -g mouse on
 set -g history-limit 100000
 set -g display-time 2000

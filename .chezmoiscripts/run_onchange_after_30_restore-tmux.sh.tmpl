@@ -1,0 +1,83 @@
+#!/bin/sh
+
+set -eu
+
+# tmux config: {{ include "dot_config/tmux/tmux.conf.tmpl" | sha256sum }}
+# plugin lock: {{ include "dot_config/tmux/plugins.lock" | sha256sum }}
+# which-key config: {{ include "dot_config/tmux/tmux-which-key/config.yaml.tmpl" | sha256sum }}
+# which-key setup: {{ include "dot_config/tmux/tmux-which-key/executable_setup.sh" | sha256sum }}
+
+config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
+tmux_dir="$config_home/tmux"
+tmux_conf="$tmux_dir/tmux.conf"
+lock_file="$tmux_dir/plugins.lock"
+plugin_root="$tmux_dir/plugins"
+
+fail() {
+    printf 'tmux restore: %s\n' "$*" >&2
+    exit 1
+}
+
+missing=""
+for command_name in awk eza fzf git python3 sesh sort tmux tr zoxide zsh; do
+    command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
+done
+[ -z "$missing" ] || fail "missing required commands:$missing"
+
+[ -f "$tmux_conf" ] || fail "missing $tmux_conf"
+[ -f "$lock_file" ] || fail "missing $lock_file"
+[ -x "$tmux_dir/tmux-which-key/setup.sh" ] || fail "missing executable tmux-which-key/setup.sh"
+
+locked=$(awk 'NF == 2 && $1 !~ /^#/ { print $1 }' "$lock_file" | LC_ALL=C sort)
+declared=$(awk '$1 == "set" && $2 == "-g" && $3 == "@plugin" { print $4 }' "$tmux_conf" | tr -d "'\"" | LC_ALL=C sort)
+[ "$locked" = "$declared" ] || {
+    printf 'tmux restore: tmux.conf and plugins.lock disagree\n' >&2
+    printf 'declared:\n%s\nlocked:\n%s\n' "$declared" "$locked" >&2
+    exit 1
+}
+
+mkdir -p "$plugin_root"
+while read -r repository revision extra; do
+    case "$repository" in
+        ''|'#'*) continue ;;
+    esac
+    [ -z "${extra:-}" ] || fail "invalid plugins.lock row for $repository"
+    case "$revision" in
+        *[!0-9a-f]*|'') fail "invalid revision for $repository" ;;
+    esac
+    [ "${#revision}" -eq 40 ] || fail "revision for $repository must be a full commit SHA"
+
+    plugin_name=${repository##*/}
+    plugin_dir="$plugin_root/$plugin_name"
+    expected_url="https://github.com/$repository.git"
+
+    if [ ! -d "$plugin_dir/.git" ]; then
+        [ ! -e "$plugin_dir" ] || fail "$plugin_dir exists but is not a Git checkout"
+        git clone "$expected_url" "$plugin_dir"
+    else
+        origin=$(git -C "$plugin_dir" remote get-url origin)
+        case "$origin" in
+            "$expected_url"|"https://github.com/$repository"|"git@github.com:$repository.git") ;;
+            *) fail "$plugin_dir has unexpected origin: $origin" ;;
+        esac
+    fi
+
+    git -C "$plugin_dir" diff --quiet || fail "$plugin_dir has modified tracked files"
+    git -C "$plugin_dir" diff --cached --quiet || fail "$plugin_dir has staged changes"
+    if ! git -C "$plugin_dir" cat-file -e "$revision^{commit}" 2>/dev/null; then
+        git -C "$plugin_dir" fetch origin
+    fi
+    git -C "$plugin_dir" checkout --quiet --detach "$revision"
+    git -C "$plugin_dir" submodule update --init --recursive
+done < "$lock_file"
+
+"$tmux_dir/tmux-which-key/setup.sh"
+
+if tmux list-sessions >/dev/null 2>&1; then
+    tmux source-file "$tmux_conf"
+    printf 'Live tmux config reload: PASS\n'
+else
+    printf 'Live tmux config reload: SKIPPED (no active server)\n'
+fi
+
+printf 'TMUX_RESTORE=PASS\n'

@@ -1,0 +1,57 @@
+#!/bin/sh
+
+set -eu
+
+# Neovim lock: {{ include "dot_config/nvim/lazy-lock.json" | sha256sum }}
+# Lazy bootstrap: {{ include "dot_config/nvim/lua/config/lazy.lua" | sha256sum }}
+# LazyVim profile: {{ include "dot_config/nvim/lazyvim.json" | sha256sum }}
+# Editor bootstrap guard: {{ include "dot_config/nvim/lua/plugins/editor.lua" | sha256sum }}
+# Formatting bootstrap guard: {{ include "dot_config/nvim/lua/plugins/formatting.lua" | sha256sum }}
+
+fail() {
+    printf 'Neovim restore: %s\n' "$*" >&2
+    exit 1
+}
+
+missing=""
+for command_name in cc git make nvim python3; do
+    command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
+done
+[ -z "$missing" ] || fail "missing required commands:$missing"
+
+config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
+data_home=${XDG_DATA_HOME:-"$HOME/.local/share"}
+[ -f "$config_home/nvim/lazy-lock.json" ] || fail "missing $config_home/nvim/lazy-lock.json"
+
+CHEZMOI_BOOTSTRAP=1 XDG_CONFIG_HOME="$config_home" nvim --headless -i NONE "+Lazy! restore" +qa
+
+python3 - "$config_home/nvim/lazy-lock.json" "$data_home/nvim/lazy" <<'PY'
+import json
+import pathlib
+import subprocess
+import sys
+
+lock_file = pathlib.Path(sys.argv[1])
+plugin_root = pathlib.Path(sys.argv[2])
+lock = json.loads(lock_file.read_text())
+errors = []
+
+for name, spec in sorted(lock.items()):
+    plugin_dir = plugin_root / name
+    if not (plugin_dir / ".git").is_dir():
+        errors.append(f"{name}: missing Git checkout")
+        continue
+    actual = subprocess.check_output(
+        ["git", "-C", str(plugin_dir), "rev-parse", "HEAD"],
+        text=True,
+    ).strip()
+    if actual != spec["commit"]:
+        errors.append(f"{name}: {actual} != {spec['commit']}")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+
+print(f"NEOVIM_LOCKS=PASS count={len(lock)}")
+PY
+
+printf 'NEOVIM_RESTORE=PASS\n'

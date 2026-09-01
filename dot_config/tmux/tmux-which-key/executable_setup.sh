@@ -4,6 +4,7 @@ set -eu
 
 config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 stable_dir="$config_home/tmux/tmux-which-key"
+lock_file="$config_home/tmux/plugins.lock"
 plugin_root="$config_home/tmux/plugins"
 plugin_dir="$plugin_root/tmux-which-key"
 plugin_config="$plugin_dir/config.yaml"
@@ -15,17 +16,18 @@ fail() {
     exit 1
 }
 
-for command_name in git python3; do
+for command_name in awk git python3; do
     command -v "$command_name" >/dev/null 2>&1 || fail "missing command: $command_name"
 done
 
 [ -f "$stable_dir/config.yaml" ] || fail "missing $stable_dir/config.yaml"
-[ -f "$stable_dir/REVISION" ] || fail "missing $stable_dir/REVISION"
+[ -f "$lock_file" ] || fail "missing $lock_file"
 
-revision=$(tr -d '[:space:]' < "$stable_dir/REVISION")
+revision=$(awk '$1 == "alexwforsythe/tmux-which-key" { print $2 }' "$lock_file")
 case "$revision" in
-    *[!0-9a-f]*|'') fail "REVISION must contain one Git commit SHA" ;;
+    *[!0-9a-f]*|'') fail "plugins.lock must contain one tmux-which-key Git commit SHA" ;;
 esac
+[ "${#revision}" -eq 40 ] || fail "tmux-which-key revision must be a full 40-character commit SHA"
 
 mkdir -p "$plugin_root"
 if [ ! -d "$plugin_dir/.git" ]; then

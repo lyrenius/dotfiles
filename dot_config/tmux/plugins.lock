@@ -1,0 +1,6 @@
+# GitHub repository and exact commit. Keep this list aligned with tmux.conf.
+tmux-plugins/tpm e261deb1b47614eed3400089ce7197dc68acc4eb
+mrjones2014/smart-splits.nvim 0ab2e4928dc867dfea3ff1da186e69f289d8a532
+tmux-plugins/tmux-cpu bcb110d754ab2417de824c464730c412a3eb2769
+alexwforsythe/tmux-which-key 85fb9756447b989f3b94e515d1e6ee7fec76cba2
+tmux-plugins/tmux-resurrect cff343cf9e81983d3da0c8562b01616f12e8d548

@@ -142,7 +142,7 @@ items:
         command: 'run-shell ~/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh'
       - name: "  Open snapshot directory"
         key: o
-        command: 'run-shell "open ~/.local/state/tmux/resurrect"'
+        command: '{{ if eq .chezmoi.os "darwin" }}run-shell "open ~/.local/state/tmux/resurrect"{{ else }}run-shell "if command -v xdg-open >/dev/null 2>&1; then xdg-open ~/.local/state/tmux/resurrect >/dev/null 2>&1; else tmux display-message Snapshots:~/.local/state/tmux/resurrect; fi"{{ end }}'
 
   - separator: true
 

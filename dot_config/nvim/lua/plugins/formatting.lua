@@ -30,6 +30,11 @@ return {
     {
         "mason-org/mason.nvim",
         opts = function(_, opts)
+            if vim.env.CHEZMOI_BOOTSTRAP == "1" then
+                opts.ensure_installed = {}
+                return
+            end
+
             opts.ensure_installed = opts.ensure_installed or {}
             for _, tool in ipairs({ "black", "clang-format", "shfmt", "stylua" }) do
                 if not vim.tbl_contains(opts.ensure_installed, tool) then

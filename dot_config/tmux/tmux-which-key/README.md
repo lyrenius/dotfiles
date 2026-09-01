@@ -5,10 +5,11 @@ tmux-which-key menu.
 
 - `config.yaml` contains the menu, key bindings, icons, Vira styling, and its
   lower-right placement.
-- `REVISION` pins the tmux-which-key plugin commit used to build the menu.
-- `setup.sh` installs or checks out that revision, links the user-owned config
-  into the plugin checkout, initializes its Python dependency, builds
-  `plugin/init.tmux`, and reloads a running tmux server when available.
+- `../plugins.lock` pins tmux-which-key and all other tmux plugin commits.
+- `setup.sh` reads that lock, installs or checks out the pinned revision, links
+  the user-owned config into the plugin checkout, initializes its Python
+  dependency, builds `plugin/init.tmux`, and reloads a running tmux server when
+  available.
 
 Do not edit `~/.config/tmux/plugins/tmux-which-key/config.yaml` directly. It is
 a generated symlink into this directory and the entire `plugins/` directory is
@@ -28,5 +29,5 @@ Other tmux plugins remain managed by TPM.
 ## Intentional plugin update
 
 Fetch the repository, choose and audit the desired commit, replace the SHA in
-`REVISION`, then run `setup.sh` again. Commit the changed `REVISION` and any
-required menu changes to the dotfiles repository.
+`~/.config/tmux/plugins.lock`, then run `setup.sh` again. Commit the changed lock
+and any required menu changes to the dotfiles repository.

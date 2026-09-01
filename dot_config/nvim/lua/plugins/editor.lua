@@ -27,6 +27,11 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         opts = function(_, opts)
+            if vim.env.CHEZMOI_BOOTSTRAP == "1" then
+                opts.ensure_installed = {}
+                return
+            end
+
             opts.ensure_installed = opts.ensure_installed or {}
             for _, parser in ipairs({
                 "cmake",

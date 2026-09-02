@@ -2,30 +2,35 @@
 
 set -eu
 
+{{ include ".chezmoitemplates/restore-ui.sh" }}
+
 # Neovim lock: {{ include "dot_config/nvim/lazy-lock.json" | sha256sum }}
 # Lazy bootstrap: {{ include "dot_config/nvim/lua/config/lazy.lua" | sha256sum }}
 # LazyVim profile: {{ include "dot_config/nvim/lazyvim.json" | sha256sum }}
 # Editor bootstrap guard: {{ include "dot_config/nvim/lua/plugins/editor.lua" | sha256sum }}
 # Formatting bootstrap guard: {{ include "dot_config/nvim/lua/plugins/formatting.lua" | sha256sum }}
 
-fail() {
-    printf 'Neovim restore: %s\n' "$*" >&2
-    exit 1
-}
+ui_init
+ui_prepare_log neovim
+ui_title "Neovim restore"
 
+ui_step "Checking prerequisites"
 missing=""
 for command_name in cc git make nvim python3; do
     command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
 done
-[ -z "$missing" ] || fail "missing required commands:$missing"
+[ -z "$missing" ] || ui_die "Missing required commands:$missing"
+ui_ok "Prerequisites"
 
 config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 data_home=${XDG_DATA_HOME:-"$HOME/.local/share"}
-[ -f "$config_home/nvim/lazy-lock.json" ] || fail "missing $config_home/nvim/lazy-lock.json"
+[ -f "$config_home/nvim/lazy-lock.json" ] || ui_die "Missing $config_home/nvim/lazy-lock.json"
 
-CHEZMOI_BOOTSTRAP=1 XDG_CONFIG_HOME="$config_home" nvim --headless -i NONE "+Lazy! restore" +qa
+ui_step "Restoring plugins from lazy-lock.json"
+CHEZMOI_BOOTSTRAP=1 XDG_CONFIG_HOME="$config_home" nvim --headless -i NONE "+Lazy! restore" +qa > "$UI_LOG_FILE" 2>&1 || ui_die_log "Lazy restore failed"
 
-python3 - "$config_home/nvim/lazy-lock.json" "$data_home/nvim/lazy" <<'PY'
+verify_file="$UI_LOG_DIR/neovim-verify.log"
+if ! python3 - "$config_home/nvim/lazy-lock.json" "$data_home/nvim/lazy" > "$verify_file" 2>&1 <<'PY'
 import json
 import pathlib
 import shutil
@@ -65,4 +70,23 @@ for item in skipped:
 print(f"NEOVIM_LOCKS=PASS count={len(lock)} verified={len(lock) - len(skipped)} skipped={len(skipped)}")
 PY
 
-printf 'NEOVIM_RESTORE=PASS\n'
+then
+    cat "$verify_file" >> "$UI_LOG_FILE"
+    ui_die_log "Neovim lock verification failed"
+fi
+
+cat "$verify_file" >> "$UI_LOG_FILE"
+while IFS= read -r item; do
+    case "$item" in
+        NEOVIM_OPTIONAL_SKIP=*) ui_warn "Skipped ${item#NEOVIM_OPTIONAL_SKIP=}" ;;
+    esac
+done < "$verify_file"
+
+summary=$(awk '/^NEOVIM_LOCKS=PASS / { print; exit }' "$verify_file")
+[ -n "$summary" ] || ui_die_log "Neovim lock verification produced no summary"
+total=$(printf '%s\n' "$summary" | sed -n 's/.*count=\([0-9][0-9]*\).*/\1/p')
+verified=$(printf '%s\n' "$summary" | sed -n 's/.*verified=\([0-9][0-9]*\).*/\1/p')
+skipped=$(printf '%s\n' "$summary" | sed -n 's/.*skipped=\([0-9][0-9]*\).*/\1/p')
+ui_ok "Lock verified · $verified/$total plugins"
+
+ui_done "Neovim ready · $verified verified · $skipped optional"

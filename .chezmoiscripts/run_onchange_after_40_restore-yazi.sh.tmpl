@@ -2,16 +2,17 @@
 
 set -eu
 
+{{ include ".chezmoitemplates/restore-ui.sh" }}
+
 # Yazi package lock: {{ include "dot_config/yazi/package.toml" | sha256sum }}
 
 config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 yazi_home="$config_home/yazi"
 package_file="$yazi_home/package.toml"
 
-fail() {
-    printf 'Yazi restore: %s\n' "$*" >&2
-    exit 1
-}
+ui_init
+ui_prepare_log yazi
+ui_title "Yazi restore"
 
 tool_version() {
     "$1" --version | awk '
@@ -29,24 +30,30 @@ tool_version() {
     '
 }
 
+ui_step "Checking prerequisites"
 missing=""
 for command_name in awk ya yazi; do
     command -v "$command_name" >/dev/null 2>&1 || missing="$missing $command_name"
 done
-[ -z "$missing" ] || fail "missing required commands:$missing"
-[ -f "$package_file" ] || fail "missing $package_file"
+[ -z "$missing" ] || ui_die "Missing required commands:$missing"
+[ -f "$package_file" ] || ui_die "Missing $package_file"
+ui_ok "Prerequisites"
 
 yazi_version=$(tool_version yazi)
 ya_version=$(tool_version ya)
-[ -n "$yazi_version" ] || fail "could not determine Yazi version"
-[ -n "$ya_version" ] || fail "could not determine Ya version"
-[ "$yazi_version" = "$ya_version" ] || fail "Yazi ($yazi_version) and Ya ($ya_version) versions differ"
+[ -n "$yazi_version" ] || ui_die "Could not determine Yazi version"
+[ -n "$ya_version" ] || ui_die "Could not determine Ya version"
+[ "$yazi_version" = "$ya_version" ] || ui_die "Yazi ($yazi_version) and Ya ($ya_version) versions differ"
+ui_ok "Yazi and Ya · v$yazi_version"
 
-YAZI_CONFIG_HOME="$yazi_home" ya pkg install
+plugin_count=$(awk -F '"' '/^use = / { count++ } END { print count + 0 }' "$package_file")
+ui_step "Restoring $plugin_count pinned plugins"
+YAZI_CONFIG_HOME="$yazi_home" ya pkg install > "$UI_LOG_FILE" 2>&1 || ui_die_log "Failed to restore Yazi plugins"
 
-awk -F '"' '/^use = / { print $2 }' "$package_file" | while read -r dependency; do
+for dependency in $(awk -F '"' '/^use = / { print $2 }' "$package_file"); do
     plugin_name=${dependency##*:}
-    [ -f "$yazi_home/plugins/$plugin_name.yazi/main.lua" ] || fail "plugin was not restored: $plugin_name"
+    [ -f "$yazi_home/plugins/$plugin_name.yazi/main.lua" ] || ui_die_log "Plugin was not restored: $plugin_name"
 done
+ui_ok "Plugin check · $plugin_count/$plugin_count"
 
-printf 'YAZI_RESTORE=PASS version=%s\n' "$yazi_version"
+ui_done "Yazi ready · v$yazi_version"

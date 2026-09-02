@@ -28,6 +28,7 @@ CHEZMOI_BOOTSTRAP=1 XDG_CONFIG_HOME="$config_home" nvim --headless -i NONE "+Laz
 python3 - "$config_home/nvim/lazy-lock.json" "$data_home/nvim/lazy" <<'PY'
 import json
 import pathlib
+import shutil
 import subprocess
 import sys
 
@@ -35,10 +36,18 @@ lock_file = pathlib.Path(sys.argv[1])
 plugin_root = pathlib.Path(sys.argv[2])
 lock = json.loads(lock_file.read_text())
 errors = []
+skipped = []
+conditional_requirements = {
+    "markdown-preview.nvim": "node",
+}
 
 for name, spec in sorted(lock.items()):
     plugin_dir = plugin_root / name
     if not (plugin_dir / ".git").is_dir():
+        requirement = conditional_requirements.get(name)
+        if requirement and shutil.which(requirement) is None:
+            skipped.append(f"{name} (missing optional command: {requirement})")
+            continue
         errors.append(f"{name}: missing Git checkout")
         continue
     actual = subprocess.check_output(
@@ -51,7 +60,9 @@ for name, spec in sorted(lock.items()):
 if errors:
     raise SystemExit("\n".join(errors))
 
-print(f"NEOVIM_LOCKS=PASS count={len(lock)}")
+for item in skipped:
+    print(f"NEOVIM_OPTIONAL_SKIP={item}")
+print(f"NEOVIM_LOCKS=PASS count={len(lock)} verified={len(lock) - len(skipped)} skipped={len(skipped)}")
 PY
 
 printf 'NEOVIM_RESTORE=PASS\n'

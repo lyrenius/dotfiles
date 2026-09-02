@@ -3,6 +3,7 @@
 set -eu
 
 # tmux config: {{ include "dot_config/tmux/tmux.conf.tmpl" | sha256sum }}
+# tmux theme: {{ include "dot_config/tmux/themes/vira-graphene.conf" | sha256sum }}
 # plugin lock: {{ include "dot_config/tmux/plugins.lock" | sha256sum }}
 # which-key config: {{ include "dot_config/tmux/tmux-which-key/config.yaml.tmpl" | sha256sum }}
 # which-key setup: {{ include "dot_config/tmux/tmux-which-key/executable_setup.sh" | sha256sum }}

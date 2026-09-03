@@ -56,6 +56,10 @@ while read -r repository revision extra; do
     esac
     [ "${#revision}" -eq 40 ] || ui_die "Revision for $repository must be a full commit SHA"
 
+    # tmux-which-key owns additional config linking and menu generation, so its
+    # reusable setup helper owns the checkout as well.
+    [ "$repository" = "alexwforsythe/tmux-which-key" ] && continue
+
     plugin_name=${repository##*/}
     plugin_dir="$plugin_root/$plugin_name"
     expected_url="https://github.com/$repository.git"
@@ -84,7 +88,8 @@ while read -r repository revision extra; do
 done < "$lock_file"
 
 ui_step "Building WhichKey menu"
-"$tmux_dir/tmux-which-key/setup.sh" >> "$UI_LOG_FILE" 2>&1 || ui_die_log "Failed to build WhichKey menu"
+TMUX_WHICH_KEY_SKIP_RELOAD=1 \
+    "$tmux_dir/tmux-which-key/setup.sh" >> "$UI_LOG_FILE" 2>&1 || ui_die_log "Failed to build WhichKey menu"
 ui_ok "WhichKey menu"
 
 if tmux list-sessions >/dev/null 2>&1; then

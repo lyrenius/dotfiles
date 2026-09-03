@@ -61,7 +61,9 @@ grep -Fq 'set -g @wk_cfg_pos_x "R"' "$generated_init"
 grep -Fq 'set -g @wk_cfg_pos_y "S"' "$generated_init"
 grep -Fq '󰆍 tmux' "$generated_init"
 
-if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+if [ "${TMUX_WHICH_KEY_SKIP_RELOAD:-0}" = 1 ]; then
+    printf 'Live tmux server reload: DEFERRED\n'
+elif command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
     tmux source-file "$generated_init"
     printf 'Live tmux server reload: PASS\n'
 else

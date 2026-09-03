@@ -164,6 +164,19 @@ local function rgb(value)
     return tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16)
 end
 
+local function opaque(value)
+    if type(value) ~= "string" then
+        return nil
+    end
+    if #value == 7 and value:match("^#%x%x%x%x%x%x$") then
+        return value
+    end
+    if #value == 9 and value:match("^#%x%x%x%x%x%x%x%x$") then
+        return value:sub(1, 7)
+    end
+    return nil
+end
+
 local function blend(value, backdrop)
     if type(value) ~= "string" then
         return nil
@@ -237,6 +250,7 @@ local function build(name)
         surface = ui(theme, "input.background", background, background)
     end
     local selection = ui(theme, "editor.selectionBackground", surface, background)
+    local visual_selection = opaque(theme.colors["editor.selectionBackground"]) or selection
     local comment = token(theme, "Comment", foreground)
     local muted = ui(theme, "editorLineNumber.activeForeground", comment, background)
     local accent = ui(theme, "button.background", M.accents.teal, background)
@@ -276,6 +290,7 @@ local function build(name)
             foreground = foreground,
             surface = surface,
             selection = selection,
+            visual_selection = visual_selection,
             muted = muted,
             comment = comment,
             black = ui(theme, "terminal.ansiBlack", "#000000", background),
@@ -474,7 +489,8 @@ function M.apply()
     set("CursorLineNr", { fg = c.accent, bg = "NONE", bold = true })
     set("LineNr", { fg = c.line_number, bg = "NONE" })
     set("WinSeparator", { fg = p.base02, bg = "NONE" })
-    set("Visual", { bg = c.selection })
+    set("Visual", { bg = c.visual_selection })
+    set("VisualNOS", { bg = c.visual_selection })
     set("Search", { fg = c.foreground, bg = c.search, bold = true })
     set("IncSearch", { fg = c.background, bg = c.accent, bold = true })
     set("CurSearch", { link = "IncSearch" })

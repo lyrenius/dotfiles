@@ -121,9 +121,7 @@ gaps.outer.right = 6
 if.app-id = 'com.mitchellh.ghostty'
 run = [
     'move-node-to-workspace 1',
-    'layout floating',
     'layout tiling',
-    'layout h_tiles',
 ]
 
 

@@ -7,6 +7,8 @@ return {
         init = function()
             -- Blink owns the final Tab mapping and calls Copilot explicitly.
             vim.g.copilot_no_tab_map = true
+            -- Use the language server bundled with copilot.vim; update it with the plugin.
+            vim.g.copilot_version = false
         end,
 
         dependencies = {

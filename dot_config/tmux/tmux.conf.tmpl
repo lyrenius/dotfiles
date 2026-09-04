@@ -35,8 +35,9 @@ setw -g automatic-rename-format "#{b:pane_current_path}"
 setw -g mode-keys vi
 set -g status-keys vi
 
-# Ctrl-a opens the discoverable leader menu. Ctrl-b remains the native fallback prefix.
-unbind-key -q C-a
+# Ctrl-q opens the discoverable leader menu. Ctrl-b remains the native fallback prefix.
+# Remove the previous root-table binding so Ctrl-a reaches the active program.
+unbind-key -q -T root C-a
 set -g prefix C-b
 bind-key C-b send-prefix
 

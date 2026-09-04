@@ -59,6 +59,7 @@ python3 "$plugin_dir/plugin/build.py" "$stable_dir/config.yaml" "$generated_init
 
 grep -Fq 'set -g @wk_cfg_pos_x "R"' "$generated_init"
 grep -Fq 'set -g @wk_cfg_pos_y "S"' "$generated_init"
+grep -Fq 'set -g @wk_cfg_key_root_table "C-q"' "$generated_init"
 grep -Fq '󰆍 tmux' "$generated_init"
 
 if [ "${TMUX_WHICH_KEY_SKIP_RELOAD:-0}" = 1 ]; then

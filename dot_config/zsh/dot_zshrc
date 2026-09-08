@@ -43,3 +43,4 @@ fi
 
 [[ -r "$ZDOTDIR/integrations/80-mise.zsh" ]] && source "$ZDOTDIR/integrations/80-mise.zsh"
 [[ -r "$ZDOTDIR/integrations/90-conda.zsh" ]] && source "$ZDOTDIR/integrations/90-conda.zsh"
+[[ -r "$ZDOTDIR/integrations/95-mamba.zsh" ]] && source "$ZDOTDIR/integrations/95-mamba.zsh"

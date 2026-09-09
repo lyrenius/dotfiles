@@ -48,7 +48,6 @@ gaps.outer.right = 6
 
     # Workspaces
     ctrl-backtick = 'workspace-back-and-forth'
-    # Keep each workspace on its assigned monitor in multi-monitor setups.
     ctrl-1 = 'workspace 1'
     ctrl-2 = 'workspace 2'
     ctrl-3 = 'workspace 3'
@@ -118,6 +117,12 @@ gaps.outer.right = 6
     esc = 'mode main'
 
 # Apps
+
+# 0: floating workspace. Keep matching windows here instead of applying the
+# application-specific routing rules below.
+[[on-window-detected]]
+if = 'test %{workspace} = 0'
+run = 'layout floating'
 
 # 1: terminal
 [[on-window-detected]]

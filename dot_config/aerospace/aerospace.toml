@@ -118,12 +118,6 @@ gaps.outer.right = 6
 
 # Apps
 
-# 0: floating workspace. Keep matching windows here instead of applying the
-# application-specific routing rules below.
-[[on-window-detected]]
-if = 'test %{workspace} = 0'
-run = 'layout floating'
-
 # 1: terminal
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
@@ -158,7 +152,7 @@ run = 'move-node-to-workspace 4'
 
 # 9: chat
 [[on-window-detected]]
-if.app-id = 'com.tencent.xinWeChat'
+if = 'test %{app-bundle-id} = com.tencent.xinWeChat && test %{window-title} = Weixin'
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
@@ -168,6 +162,12 @@ run = 'move-node-to-workspace 9'
 [[on-window-detected]]
 if.app-id = 'now.typeless.desktop'
 run = 'move-node-to-workspace 9'
+
+# 0: floating fallback. Application-specific routing rules above take
+# precedence; unmatched windows opened in workspace 0 stay here and float.
+[[on-window-detected]]
+if = 'test %{workspace} = 0'
+run = 'layout floating'
 
 # Floating
 [[on-window-detected]]

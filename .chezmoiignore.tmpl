@@ -2,3 +2,6 @@
 .zshenv
 .config/zsh
 {{- end -}}
+{{- if ne .chezmoi.os "darwin" }}
+Library/LaunchAgents/com.lyre.xdg-codex-home.plist
+{{- end }}

@@ -156,12 +156,24 @@ if = 'test %{app-bundle-id} = com.tencent.xinWeChat && test %{window-title} = We
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
+if.app-id = 'com.tencent.WeWorkMac'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
 if.app-id = 'com.bytedance.macos.feishu'
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
 if.app-id = 'now.typeless.desktop'
 run = 'move-node-to-workspace 9'
+
+# 0: file manager
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = [
+    'move-node-to-workspace 0',
+    'layout floating',
+]
 
 # 0: floating fallback. Application-specific routing rules above take
 # precedence; unmatched windows opened in workspace 0 stay here and float.

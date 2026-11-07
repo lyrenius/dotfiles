@@ -18,7 +18,6 @@ set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 
 # General behavior
-set-environment -g TMUX_PLUGIN_MANAGER_PATH "{{ joinPath .chezmoi.homeDir ".config/tmux/plugins" }}/"
 set -g default-shell "{{ $defaultShell }}"
 set -g mouse on
 set -g history-limit 100000
@@ -84,13 +83,8 @@ bind-key w choose-tree -Zw
 # Vira Graphene UI. Resolve relative to the final XDG config location.
 source-file -q ~/.config/tmux/themes/vira-graphene.conf
 
-# Community integrations. TPM must remain the final executed component.
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'mrjones2014/smart-splits.nvim'
-set -g @plugin 'tmux-plugins/tmux-cpu'
-set -g @plugin 'alexwforsythe/tmux-which-key'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-
+# Plugin options. plugins.lock lists the plugins and their pinned commits;
+# load-plugins.sh runs them at the end of this file, after these are set.
 set -g @smart-splits_no_wrap '1'
 
 set -g @cpu_low_fg_color '#[fg=#C3E88D]'
@@ -124,6 +118,5 @@ set -g @tmux-which-key-disable-autobuild '0'
 set -g @resurrect-dir '~/.local/state/tmux/resurrect'
 set -g @resurrect-capture-pane-contents 'off'
 
-if-shell '[ -x ~/.config/tmux/plugins/tpm/tpm ]' {
-    run-shell '~/.config/tmux/plugins/tpm/tpm'
-}
+# Keep last: plugins read the options above and wrap the theme's status line.
+run-shell '~/.config/tmux/load-plugins.sh'

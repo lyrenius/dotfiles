@@ -20,6 +20,22 @@ zsh reads `~/.zshenv` (`dot_zshenv`), which only points `ZDOTDIR` at
 To add a tool's interactive hook, add `integrations/NN-tool.zsh` that checks
 for the tool itself; `.zshrc` does not need to change.
 
+## tmux plugins
+
+`dot_config/tmux/plugins.lock` is the only plugin list: one GitHub repository
+and full commit SHA per line, in load order. The tmux restore script checks
+each one out under `~/.config/tmux/plugins/`, and `load-plugins.sh` (run at the
+end of `tmux.conf`) executes their `*.tmux` entry points the way TPM would.
+There is no TPM, so nothing updates a plugin behind the lock.
+
+To add or update a plugin, edit `plugins.lock` (and any `@option`s in
+`tmux.conf.tmpl`), then `chezmoi apply`. The restore script reports checkouts
+that are no longer in the lock; delete them by hand.
+
+The tmux-which-key menu lives in `tmux-which-key/config.yaml.tmpl`. The restore
+script links it into the plugin checkout and builds it once to catch errors;
+the plugin rebuilds it whenever tmux loads.
+
 ## Platform boundaries
 
 - `.chezmoiignore.tmpl` excludes the entire `Library` tree, AeroSpace, and the

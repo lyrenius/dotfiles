@@ -5,16 +5,16 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
 
-# Tool homes.
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+# Tool state, from toolHomes in .chezmoidata.toml (shared with the macOS
+# GUI environment).
+{{- range $name, $dir := .toolHomes }}
+export {{ $name }}="$XDG_DATA_HOME/{{ $dir }}"
+{{- end }}
+
+# Tool config and caches.
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
-export GROK_HOME="$XDG_DATA_HOME/grok"
-export CLAUDE_CONFIG_DIR="$XDG_DATA_HOME/claude"
-export COPILOT_HOME="$XDG_DATA_HOME/copilot"
-export CODEX_HOME="$XDG_DATA_HOME/codex"
 
 # Persistent shell state and generated caches.
 export HISTFILE="$XDG_STATE_HOME/zsh/history"

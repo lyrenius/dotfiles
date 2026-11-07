@@ -9,3 +9,19 @@ zsh = true
 tmux = true
 yazi = true
 neovim = true
+
+# Tool state moved under XDG_DATA_HOME (~/.local/share): variable = directory.
+# .zshenv exports every entry for shells.
+[toolHomes]
+CARGO_HOME = "cargo"
+RUSTUP_HOME = "rustup"
+GROK_HOME = "grok"
+CLAUDE_CONFIG_DIR = "claude"
+COPILOT_HOME = "copilot"
+CODEX_HOME = "codex"
+
+# Entries of toolHomes that GUI apps on macOS also need. Apps opened from the
+# Dock or Spotlight never read .zshenv; the com.lyre.environment LaunchAgent
+# sets these for them at login.
+[launchd]
+env = ["CODEX_HOME"]

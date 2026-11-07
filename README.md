@@ -26,6 +26,22 @@ zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
 To add a tool's interactive hook, add `integrations/NN-tool.zsh` that checks
 for the tool itself; `.zshrc` does not need to change.
 
+## Tool homes and GUI apps
+
+`toolHomes` in `home/.chezmoidata.toml` lists the tools whose state moved under
+`~/.local/share`, as `VARIABLE = "directory"`. `.zshenv` exports every entry.
+
+GUI apps on macOS start from launchd and never read `.zshenv`. Names listed in
+`launchd.env` are also set for them: the `com.lyre.environment` LaunchAgent runs
+`launchctl setenv` at login, and on `chezmoi apply` the launchd-environment
+script applies a change right away. Both are rendered from
+`.chezmoitemplates/launchd-setenv.sh`, so each value is written once. Apps that
+are already open keep their old environment until relaunched, and a name removed
+from `launchd.env` is dropped at the next login.
+
+To relocate another tool, add it to `toolHomes`; add it to `launchd.env` as well
+if its GUI app needs it.
+
 ## tmux plugins
 
 `home/dot_config/tmux/plugins.lock` is the only plugin list: one GitHub repository

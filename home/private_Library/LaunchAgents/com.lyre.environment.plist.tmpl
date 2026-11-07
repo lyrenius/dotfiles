@@ -1,17 +1,18 @@
+{{- if .launchd.env -}}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Generated from toolHomes and launchd.env in .chezmoidata.toml. -->
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.lyre.xdg-codex-home</string>
+  <string>com.lyre.environment</string>
   <key>LimitLoadToSessionType</key>
   <string>Aqua</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/launchctl</string>
-    <string>setenv</string>
-    <string>CODEX_HOME</string>
-    <string>{{ .chezmoi.homeDir }}/.local/share/codex</string>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>{{ includeTemplate "launchd-setenv.sh" . | trim | html }}</string>
   </array>
   <key>ProcessType</key>
   <string>Background</string>
@@ -19,3 +20,4 @@
   <true/>
 </dict>
 </plist>
+{{ end -}}

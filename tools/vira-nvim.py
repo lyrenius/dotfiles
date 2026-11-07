@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate Neovim theme data from the installed VS Code Vira Theme extension.
 
-Each variant is written to dot_config/nvim/lua/vira/variants/<variant>.json as
+Each variant is written to home/dot_config/nvim/lua/vira/variants/<variant>.json as
 the extension's own theme JSON (comments removed, keys in source order) plus a
 "_source" entry recording where it came from. lua/vira/init.lua turns that data
 into highlight groups; nothing in the JSON is edited by hand.
@@ -11,7 +11,7 @@ Examples:
     tools/vira-nvim.py                     # regenerate every variant
     tools/vira-nvim.py --variant palenight # regenerate only the named variant(s)
 
-This tool is not deployed: .chezmoiignore excludes tools/.
+This tool is not deployed: tools/ is outside the chezmoi source state (home/).
 """
 
 import argparse
@@ -28,7 +28,7 @@ EXTENSION_ROOTS = (
     "~/.vscode-oss/extensions",
 )
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUT = REPO_ROOT / "dot_config" / "nvim" / "lua" / "vira" / "variants"
+DEFAULT_OUT = REPO_ROOT / "home" / "dot_config" / "nvim" / "lua" / "vira" / "variants"
 
 
 def strip_jsonc(text):

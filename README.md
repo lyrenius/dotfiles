@@ -1,13 +1,19 @@
 # Dotfiles
 
-This is the chezmoi source directory. Paths mirror the destination home
-directory: `dot_config` becomes `~/.config`, and `private_Library` becomes
-`~/Library`. Templates and restore scripts live in chezmoi's special directories.
+This repository is a chezmoi source directory. `.chezmoiroot` points chezmoi
+at `home/`, so the repository root holds only files about the repository:
+
+- `home/` mirrors the home directory: `home/dot_config` becomes `~/.config`,
+  and `home/private_Library` becomes `~/Library`. chezmoi's own files
+  (`.chezmoidata.toml`, `.chezmoiignore.tmpl`, `.chezmoiscripts/`, and so on)
+  live there too.
+- `tools/` holds repository tooling. It is outside `home/` and never deployed.
+- `README.md` is this file.
 
 ## Shell layout
 
-zsh reads `~/.zshenv` (`dot_zshenv`), which only points `ZDOTDIR` at
-`~/.config/zsh`. Each file there has one phase:
+zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
+`~/.config/zsh` (`home/dot_config/zsh/`). Each file there has one phase:
 
 | File | Runs in | Owns |
 | --- | --- | --- |
@@ -22,7 +28,7 @@ for the tool itself; `.zshrc` does not need to change.
 
 ## tmux plugins
 
-`dot_config/tmux/plugins.lock` is the only plugin list: one GitHub repository
+`home/dot_config/tmux/plugins.lock` is the only plugin list: one GitHub repository
 and full commit SHA per line, in load order. The tmux restore script checks
 each one out under `~/.config/tmux/plugins/`, and `load-plugins.sh` (run at the
 end of `tmux.conf`) executes their `*.tmux` entry points the way TPM would.
@@ -38,8 +44,8 @@ the plugin rebuilds it whenever tmux loads.
 
 ## Neovim theme
 
-`lua/vira/init.lua` builds the `vira-graphene` colorscheme from the variant
-files in `lua/vira/variants/`, one per Vira variant; `:ViraTheme` switches
+In `home/dot_config/nvim/`, `lua/vira/init.lua` builds the `vira-graphene`
+colorscheme from the variant files in `lua/vira/variants/`, one per Vira variant; `:ViraTheme` switches
 between them. Those JSON files are generated from the installed VS Code Vira
 Theme extension; do not edit them by hand:
 
@@ -47,8 +53,6 @@ Theme extension; do not edit them by hand:
 tools/vira-nvim.py --list              # variants the extension provides
 tools/vira-nvim.py                     # regenerate every variant
 ```
-
-`tools/` is repository tooling and is not deployed.
 
 ## Platform boundaries
 
@@ -63,7 +67,7 @@ installation. An existing `MAMBA_ROOT_PREFIX` is preserved.
 
 ## Machine-specific choices
 
-`.chezmoidata.toml` records shared defaults. Zsh management is explicit and does
+`home/.chezmoidata.toml` records shared defaults. Zsh management is explicit and does
 not change with the `SHELL` environment variable. To override defaults on one
 machine, merge the relevant settings into `~/.config/chezmoi/chezmoi.toml`:
 
@@ -96,6 +100,6 @@ be present and restore pinned plugin versions; they do not install system
 packages, Oh My Zsh, or its prompt and plugins. Disable unneeded restore scripts
 in the local configuration on machines with a smaller tool set.
 
-Prefer `chezmoi edit` for managed files, or update this source directory and
+Prefer `chezmoi edit` for managed files, or update the files under `home/` and
 inspect `chezmoi diff` before applying. Keep machine-local paths and choices out
 of shared configuration unless they are guarded by a platform or capability check.

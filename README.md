@@ -27,10 +27,30 @@ zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
 To add a tool's interactive hook, add `integrations/NN-tool.zsh` that checks
 for the tool itself; `.zshrc` does not need to change.
 
+## fish
+
+Where `features.fish` is enabled, `home/dot_config/fish/` and the starship
+prompt (`home/dot_config/starship.toml`) are deployed. fish reads every
+`conf.d/*.fish` in file-name order, then `config.fish`:
+
+| File | Runs in | Owns |
+| --- | --- | --- |
+| `conf.d/00-environment.fish` | every fish | the same environment as `.zshenv`: XDG and tool homes, `EDITOR`, `LANG`, PATH. |
+| `conf.d/10-aliases.fish` | interactive | the `.zshrc` aliases, each only when its tool is installed. |
+| `conf.d/20-fzf.fish` … `95-mamba.fish` | interactive (mise also elsewhere, as shims) | tool hooks, as in zsh's `integrations/`. |
+| `config.fish` | interactive | the starship prompt. |
+
+The prompt keeps the zsh layout (two lines, left frame, dotted gap, details on
+the right) as plain colored text in the Vira Graphene palette, with three
+icons: the OS logo, the git branch, and ✔/✘. The macOS-only zsh setup
+(Homebrew, the YubiKey agent, OrbStack, JetBrains Toolbox) has no fish
+counterpart yet.
+
 ## Tool homes and GUI apps
 
 `toolHomes` in `home/.chezmoidata.toml` lists the tools whose state moved under
-`~/.local/share`, as `VARIABLE = "directory"`. `.zshenv` exports every entry.
+`~/.local/share`, as `VARIABLE = "directory"`. `.zshenv` and fish's
+`conf.d/00-environment.fish` export every entry.
 
 GUI apps on macOS start from launchd and never read `.zshenv`. Names listed in
 `launchd.env` are also set for them: the `com.lyre.environment` LaunchAgent runs
@@ -88,13 +108,14 @@ installation. An existing `MAMBA_ROOT_PREFIX` is preserved.
 under `[data]` in `~/.config/chezmoi/chezmoi.toml`.
 
 Shell configuration is opt-in, because each machine picks its own shell. The zsh
-configuration (`~/.zshenv` and `~/.config/zsh/`) is deployed only where it is
-enabled, and it does not follow the `SHELL` environment variable. On a machine
-that uses zsh:
+configuration (`~/.zshenv` and `~/.config/zsh/`) and the fish configuration
+(`~/.config/fish/` and `~/.config/starship.toml`) are deployed only where they
+are enabled, and neither follows the `SHELL` environment variable. On a machine
+that uses zsh, or fish:
 
 ```toml
 [data.features]
-zsh = true
+zsh = true    # or: fish = true
 ```
 
 Turning it off later leaves the deployed files in place, but chezmoi stops

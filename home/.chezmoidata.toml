@@ -4,6 +4,7 @@
 # Shell configuration is opt-in: each machine enables the shell it uses.
 [features]
 zsh = false
+fish = false
 
 # Plugin restoration is separate from deploying configuration files.
 # These defaults preserve the full development environment on this Mac.
@@ -13,7 +14,7 @@ yazi = true
 neovim = true
 
 # Tool state moved under XDG_DATA_HOME (~/.local/share): variable = directory.
-# .zshenv exports every entry for shells.
+# .zshenv and fish's conf.d/00-environment.fish export every entry.
 [toolHomes]
 CARGO_HOME = "cargo"
 RUSTUP_HOME = "rustup"

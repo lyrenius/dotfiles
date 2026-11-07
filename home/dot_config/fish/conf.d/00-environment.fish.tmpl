@@ -1,0 +1,29 @@
+# Environment for every fish, interactive or not; the fish counterpart of
+# .zshenv. Tool homes come from toolHomes in .chezmoidata.toml.
+set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx XDG_DATA_HOME $HOME/.local/share
+set -gx XDG_STATE_HOME $HOME/.local/state
+set -gx XDG_CACHE_HOME $HOME/.cache
+
+# Tool state.
+{{- range $name, $dir := .toolHomes }}
+set -gx {{ $name }} $XDG_DATA_HOME/{{ $dir }}
+{{- end }}
+
+# Tool config and caches.
+set -gx DOCKER_CONFIG $XDG_CONFIG_HOME/docker
+set -gx NPM_CONFIG_CACHE $XDG_CACHE_HOME/npm
+set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
+
+# User-wide command defaults.
+set -gx EDITOR nvim
+set -gx LANG en_US.UTF-8
+
+# User wrappers first, then Homebrew's keg-only rustup proxies (when present)
+# and cargo-installed tools. fish_add_path skips directories that do not exist
+# and never adds a directory twice.
+set -l toolchain_path
+if set -q HOMEBREW_PREFIX; and test -d $HOMEBREW_PREFIX/opt/rustup/bin
+    set toolchain_path $HOMEBREW_PREFIX/opt/rustup/bin
+end
+fish_add_path --global --prepend --move $HOME/.local/bin $toolchain_path $CARGO_HOME/bin

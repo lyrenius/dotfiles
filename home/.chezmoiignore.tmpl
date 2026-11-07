@@ -2,6 +2,10 @@
 .zshenv
 .config/zsh
 {{ end -}}
+{{ if not .features.fish -}}
+.config/fish
+.config/starship.toml
+{{ end -}}
 {{ if ne .chezmoi.os "darwin" -}}
 Library
 .config/aerospace

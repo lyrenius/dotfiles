@@ -1,0 +1,126 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Two-line prompt with the zsh layout: left frame, dotted gap, details on the
+# right of the first line, a blank line between prompts. Plain colored text, no
+# segments. Icons: OS logo, git branch, ✔/✘. Colors come from the palette below.
+# Used by fish (features.fish); the zsh prompt is Powerlevel10k.
+#
+# Nerd Font glyph written as an escape: \uF126 branch
+add_newline = true
+palette = "vira_graphene"
+
+format = """
+[╭─](fg:frame)$os$directory$git_branch$git_status $fill\
+$character$status$cmd_duration$jobs$python$conda$username$hostname$time\
+$line_break\
+[╰─](fg:frame) [❯](fg:prompt) """
+
+# Vira Graphene, as in the tmux theme and the Neovim colorscheme.
+[palettes.vira_graphene]
+frame = "#545454"
+os = "#D9D9D9"
+dir = "#6581BD"
+git = "#80CBC4"
+git_dirty = "#BD9855"
+ok = "#C3E88D"
+err = "#B2595E"
+dur = "#BD9855"
+jobs = "#80CBC4"
+env = "#6581BD"
+user = "#BD9855"
+root = "#B2595E"
+time = "#676767"
+prompt = "#80CBC4"
+
+[os]
+disabled = false
+format = "[ $symbol ](fg:os)"
+
+# One glyph per system. CachyOS uses the Arch logo: Maple Mono NF 7.900 has
+# no CachyOS glyph (U+F385).
+[os.symbols]
+Macos = "\uF179"
+Arch = "\uF303"
+CachyOS = "\uF303"
+EndeavourOS = "\uF303"
+Manjaro = "\uF303"
+Ubuntu = "\uF31B"
+Debian = "\uF306"
+Fedora = "\uF30A"
+Linux = "\uF17C"
+
+[directory]
+format = "[ $path$read_only](bold fg:dir)"
+truncate_to_repo = false
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = " ro"
+
+[git_branch]
+format = "[  \uF126 $branch](fg:git)"
+
+[git_status]
+format = "([$ahead_behind$stashed$conflicted$staged$modified$untracked$renamed$deleted](fg:git_dirty))"
+ahead = " ⇡${count}"
+behind = " ⇣${count}"
+diverged = " ⇣${behind_count}⇡${ahead_count}"
+stashed = " *${count}"
+conflicted = " ~${count}"
+staged = " +${count}"
+modified = " !${count}"
+untracked = " ?${count}"
+renamed = " »${count}"
+deleted = " !${count}"
+
+[fill]
+symbol = "·"
+style = "fg:frame"
+
+# ✔ after a successful command; status below covers failures.
+[character]
+format = "$symbol"
+success_symbol = "[ ✔](fg:ok)"
+error_symbol = ""
+
+# Exit code and ✘ after a failure; hidden after success (empty success_symbol).
+[status]
+disabled = false
+format = "[ $int ✘](fg:err)"
+success_symbol = ""
+
+[cmd_duration]
+min_time = 3000
+format = "[  $duration](fg:dur)"
+
+[jobs]
+format = "[  $symbol$number](fg:jobs)"
+symbol = "&"
+number_threshold = 1
+symbol_threshold = 1
+
+[python]
+format = "([  $virtualenv](fg:env))"
+detect_extensions = []
+detect_files = []
+detect_folders = []
+
+[conda]
+format = "[  $environment](fg:env)"
+ignore_base = true
+
+[username]
+format = "[  $user]($style)"
+style_user = "fg:user"
+style_root = "fg:root"
+
+[hostname]
+format = "[@$hostname](fg:user)"
+ssh_only = true
+
+[time]
+disabled = false
+time_format = "%H:%M:%S"
+format = "[  $time](fg:time)"
+
+[line_break]
+disabled = false

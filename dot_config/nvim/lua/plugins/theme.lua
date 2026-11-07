@@ -1,4 +1,4 @@
-local vira = require("config.vira")
+local vira = require("vira")
 local p = vira.palette
 local c = vira.colors
 

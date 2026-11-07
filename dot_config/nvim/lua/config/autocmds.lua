@@ -28,7 +28,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     group = vim.api.nvim_create_augroup("lyre_transparent_ui", { clear = true }),
     callback = function()
         if (vim.g.colors_name or ""):find("^vira%-") then
-            vim.schedule(require("config.vira").apply)
+            vim.schedule(require("vira").apply)
         end
     end,
 })

@@ -36,6 +36,20 @@ The tmux-which-key menu lives in `tmux-which-key/config.yaml.tmpl`. The restore
 script links it into the plugin checkout and builds it once to catch errors;
 the plugin rebuilds it whenever tmux loads.
 
+## Neovim theme
+
+`lua/vira/init.lua` builds the `vira-graphene` colorscheme from the variant
+files in `lua/vira/variants/`, one per Vira variant; `:ViraTheme` switches
+between them. Those JSON files are generated from the installed VS Code Vira
+Theme extension; do not edit them by hand:
+
+```sh
+tools/vira-nvim.py --list              # variants the extension provides
+tools/vira-nvim.py                     # regenerate every variant
+```
+
+`tools/` is repository tooling and is not deployed.
+
 ## Platform boundaries
 
 - `.chezmoiignore.tmpl` excludes the entire `Library` tree, AeroSpace, and the

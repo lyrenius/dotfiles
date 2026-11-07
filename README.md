@@ -12,6 +12,7 @@ at `home/`, so the repository root holds only files about the repository:
 
 ## Shell layout
 
+This applies where `features.zsh` is enabled (see Machine-specific choices).
 zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
 `~/.config/zsh` (`home/dot_config/zsh/`). Each file there has one phase:
 
@@ -83,14 +84,26 @@ installation. An existing `MAMBA_ROOT_PREFIX` is preserved.
 
 ## Machine-specific choices
 
-`home/.chezmoidata.toml` records shared defaults. Zsh management is explicit and does
-not change with the `SHELL` environment variable. To override defaults on one
-machine, merge the relevant settings into `~/.config/chezmoi/chezmoi.toml`:
+`home/.chezmoidata.toml` records shared defaults. Each machine overrides them
+under `[data]` in `~/.config/chezmoi/chezmoi.toml`.
+
+Shell configuration is opt-in, because each machine picks its own shell. The zsh
+configuration (`~/.zshenv` and `~/.config/zsh/`) is deployed only where it is
+enabled, and it does not follow the `SHELL` environment variable. On a machine
+that uses zsh:
 
 ```toml
 [data.features]
-zsh = false
+zsh = true
+```
 
+Turning it off later leaves the deployed files in place, but chezmoi stops
+updating them.
+
+Plugin restores are enabled by default. To skip some on a machine with a
+smaller tool set:
+
+```toml
 [data.restore]
 tmux = false
 yazi = false
@@ -98,8 +111,7 @@ neovim = false
 ```
 
 Disabling a restore script keeps the application's configuration managed; it
-only disables plugin installation and restoration. The default restore settings
-remain enabled for the complete development environment.
+only disables plugin installation and restoration.
 
 ## Applying changes
 

@@ -1,7 +1,9 @@
 # Shared defaults. Override per machine in ~/.config/chezmoi/chezmoi.toml
 # under [data.features] and [data.restore].
+
+# Shell configuration is opt-in: each machine enables the shell it uses.
 [features]
-zsh = true
+zsh = false
 
 # Plugin restoration is separate from deploying configuration files.
 # These defaults preserve the full development environment on this Mac.

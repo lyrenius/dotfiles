@@ -1,16 +1,24 @@
+# 24-bit foreground escape for a #RRGGBB color.
+ui_rgb() {
+    ui_hex=${1#\#}
+    printf '\033[38;2;%d;%d;%dm' "0x$(printf %s "$ui_hex" | cut -c1-2)" \
+        "0x$(printf %s "$ui_hex" | cut -c3-4)" "0x$(printf %s "$ui_hex" | cut -c5-6)"
+}
+
+# Colors come from the palette in .chezmoidata.toml.
 ui_init() {
     if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
         UI_RESET=$(printf '\033[0m')
-        UI_TEAL=$(printf '\033[38;2;128;203;196m')
-        UI_GREEN=$(printf '\033[38;2;195;232;141m')
-        UI_YELLOW=$(printf '\033[38;2;255;203;107m')
-        UI_RED=$(printf '\033[38;2;240;113;120m')
-        UI_MUTED=$(printf '\033[38;2;103;103;103m')
+        UI_ACCENT=$(ui_rgb '{{ .palette.accent }}')
+        UI_GREEN=$(ui_rgb '{{ .palette.green }}')
+        UI_GOLD=$(ui_rgb '{{ .palette.gold }}')
+        UI_RED=$(ui_rgb '{{ .palette.red }}')
+        UI_MUTED=$(ui_rgb '{{ .palette.muted }}')
     else
         UI_RESET=''
-        UI_TEAL=''
+        UI_ACCENT=''
         UI_GREEN=''
-        UI_YELLOW=''
+        UI_GOLD=''
         UI_RED=''
         UI_MUTED=''
     fi
@@ -26,11 +34,11 @@ ui_prepare_log() {
 }
 
 ui_title() {
-    printf '\n%s◆%s %s\n' "$UI_TEAL" "$UI_RESET" "$1"
+    printf '\n%s◆%s %s\n' "$UI_ACCENT" "$UI_RESET" "$1"
 }
 
 ui_step() {
-    printf '  %s›%s %s\n' "$UI_TEAL" "$UI_RESET" "$1"
+    printf '  %s›%s %s\n' "$UI_ACCENT" "$UI_RESET" "$1"
 }
 
 ui_ok() {
@@ -38,7 +46,7 @@ ui_ok() {
 }
 
 ui_warn() {
-    printf '  %s!%s %s\n' "$UI_YELLOW" "$UI_RESET" "$1"
+    printf '  %s!%s %s\n' "$UI_GOLD" "$UI_RESET" "$1"
 }
 
 ui_note() {

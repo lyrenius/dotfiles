@@ -15,22 +15,22 @@ $character$status$cmd_duration$jobs$python$conda$username$hostname$time\
 $line_break\
 [╰─](fg:frame) [❯](fg:prompt) """
 
-# Vira Graphene, as in the tmux theme and the Neovim colorscheme.
+# Prompt roles mapped onto the shared palette in .chezmoidata.toml.
 [palettes.vira_graphene]
-frame = "#545454"
-os = "#D9D9D9"
-dir = "#6581BD"
-git = "#80CBC4"
-git_dirty = "#BD9855"
-ok = "#C3E88D"
-err = "#B2595E"
-dur = "#BD9855"
-jobs = "#80CBC4"
-env = "#6581BD"
-user = "#BD9855"
-root = "#B2595E"
-time = "#676767"
-prompt = "#80CBC4"
+frame = "{{ .palette.subtle }}"
+os = "{{ .palette.foreground }}"
+dir = "{{ .palette.blue }}"
+git = "{{ .palette.accent }}"
+git_dirty = "{{ .palette.gold }}"
+ok = "{{ .palette.green }}"
+err = "{{ .palette.red }}"
+dur = "{{ .palette.gold }}"
+jobs = "{{ .palette.accent }}"
+env = "{{ .palette.blue }}"
+user = "{{ .palette.gold }}"
+root = "{{ .palette.red }}"
+time = "{{ .palette.muted }}"
+prompt = "{{ .palette.accent }}"
 
 [os]
 disabled = false

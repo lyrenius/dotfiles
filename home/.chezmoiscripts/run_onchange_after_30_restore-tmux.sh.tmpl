@@ -3,13 +3,13 @@
 
 set -eu
 
-{{ include ".chezmoitemplates/restore-ui.sh" }}
+{{ template "restore-ui.sh" . }}
 
-# tmux config: {{ include "dot_config/tmux/tmux.conf.tmpl" | sha256sum }}
-# tmux theme: {{ include "dot_config/tmux/themes/vira-graphene.conf" | sha256sum }}
+# tmux config: {{ includeTemplate "dot_config/tmux/tmux.conf.tmpl" . | sha256sum }}
+# tmux theme: {{ includeTemplate "dot_config/tmux/themes/vira-graphene.conf.tmpl" . | sha256sum }}
 # plugin lock: {{ include "dot_config/tmux/plugins.lock" | sha256sum }}
 # plugin loader: {{ include "dot_config/tmux/executable_load-plugins.sh" | sha256sum }}
-# which-key config: {{ include "dot_config/tmux/tmux-which-key/config.yaml.tmpl" | sha256sum }}
+# which-key config: {{ includeTemplate "dot_config/tmux/tmux-which-key/config.yaml.tmpl" . | sha256sum }}
 
 config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 tmux_dir="$config_home/tmux"

@@ -3,7 +3,7 @@
 
 set -eu
 
-{{ include ".chezmoitemplates/restore-ui.sh" }}
+{{ template "restore-ui.sh" . }}
 
 # Neovim lock: {{ include "dot_config/nvim/lazy-lock.json" | sha256sum }}
 # Lazy bootstrap: {{ include "dot_config/nvim/lua/config/lazy.lua" | sha256sum }}

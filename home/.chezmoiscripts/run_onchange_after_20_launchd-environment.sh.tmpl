@@ -7,7 +7,7 @@
 
 set -eu
 
-{{ include ".chezmoitemplates/restore-ui.sh" }}
+{{ template "restore-ui.sh" . }}
 
 ui_init
 ui_title "GUI environment"

@@ -79,6 +79,15 @@ The tmux-which-key menu lives in `tmux-which-key/config.yaml.tmpl`. The restore
 script links it into the plugin checkout and builds it once to catch errors;
 the plugin rebuilds it whenever tmux loads.
 
+## Colors
+
+`palette` in `home/.chezmoidata.toml` holds the Vira Graphene colors used by
+the tmux theme and status line, the tmux-which-key menu, the starship prompt,
+and the restore scripts' output. Change a color there; `chezmoi apply`
+re-renders those files and reloads a running tmux server. Because the restore
+scripts embed the colors, a palette change also runs them once more. Neovim
+takes its colors from the generated theme files instead (see Neovim theme).
+
 ## Neovim theme
 
 In `home/dot_config/nvim/`, `lua/vira/init.lua` builds the `vira-graphene`

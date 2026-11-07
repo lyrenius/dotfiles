@@ -3,7 +3,7 @@
 
 set -eu
 
-{{ include ".chezmoitemplates/restore-ui.sh" }}
+{{ template "restore-ui.sh" . }}
 
 # Yazi package lock: {{ include "dot_config/yazi/package.toml" | sha256sum }}
 

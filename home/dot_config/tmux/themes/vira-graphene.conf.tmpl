@@ -1,0 +1,34 @@
+# Vira Graphene for tmux; colors come from the palette in .chezmoidata.toml.
+# Ghostty owns the terminal background opacity.
+
+set -g status on
+set -g status-position bottom
+set -g status-justify centre
+set -g status-interval 5
+set -g status-left-length 100
+set -g status-right-length 240
+set -g status-style 'bg=default,fg={{ .palette.muted }}'
+
+set -g status-left '#[fg={{ .palette.gold }},bold]#{?client_prefix,󰌌 PREFIX ,}#[fg={{ .palette.border }},nobold]#{?client_prefix,│ ,}#[fg={{ .palette.blue }},bold]#{?pane_in_mode,󰆏 COPY ,}#[fg={{ .palette.border }},nobold]#{?pane_in_mode,│ ,}#[fg={{ .palette.red }},bold]#{?pane_synchronized,󰓦 SYNC ,}#[fg={{ .palette.border }},nobold]#{?pane_synchronized,│ ,}#[fg={{ .palette.accent }},bold]󰆍 #S #[fg={{ .palette.border }},nobold]│ #[fg={{ .palette.muted }}]󰖲 #{session_windows} #[fg={{ .palette.border }}]│ #[fg={{ .palette.muted }}] #{window_panes} '
+set -g status-right '#[fg={{ .palette.blue }}] #{pane_current_command} #[fg={{ .palette.border }}]│ #[fg={{ .palette.blue }}] #{b:pane_current_path} #[fg={{ .palette.border }}]│ #{cpu_fg_color} #{cpu_percentage} #[fg={{ .palette.border }}]│ #{ram_fg_color}󰍛 #{ram_percentage} #[fg={{ .palette.border }}]│ #[fg={{ .palette.muted }}]󰒋 #H #[fg={{ .palette.border }}]│ #[fg={{ .palette.gold }}]󰃭 %a %b %d #[fg={{ .palette.border }}]│ #[fg={{ .palette.foreground }},bold]󰥔 %H:%M '
+
+setw -g window-status-separator '#[fg={{ .palette.border }}]│'
+setw -g window-status-format '#[fg={{ .palette.subtle }}] #I #[fg={{ .palette.muted }}]#W '
+setw -g window-status-current-format '#[fg={{ .palette.accent }},bold] 󰖲 #I:#W#{?window_zoomed_flag, 󰊓,} '
+setw -g window-status-activity-style 'fg={{ .palette.gold }},bg=default,bold'
+setw -g window-status-bell-style 'fg={{ .palette.red }},bg=default,bold'
+
+set -g pane-border-style 'fg={{ .palette.border }},bg=default'
+set -g pane-active-border-style 'fg={{ .palette.accent }},bg=default'
+set -g pane-border-lines single
+
+set -g mode-style 'fg={{ .palette.background }},bg={{ .palette.accent }},bold'
+set -g message-style 'fg={{ .palette.foreground }},bg={{ .palette.surface }}'
+set -g message-command-style 'fg={{ .palette.foreground }},bg={{ .palette.surface }}'
+set -g popup-style 'fg={{ .palette.foreground }},bg={{ .palette.surface }}'
+set -g popup-border-style 'fg={{ .palette.accent }},bg={{ .palette.surface }}'
+set -g popup-border-lines rounded
+# Older tmux releases use their native menu colors instead of these options.
+set -g -q menu-style 'fg={{ .palette.foreground }},bg={{ .palette.surface }}'
+set -g -q menu-selected-style 'fg={{ .palette.background }},bg={{ .palette.accent }},bold'
+set -g clock-mode-colour '{{ .palette.accent }}'

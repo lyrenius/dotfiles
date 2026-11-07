@@ -1,0 +1,46 @@
+# ------------------------------
+# 1. Powerlevel10k instant prompt
+# ------------------------------
+# Keep this near the top, before startup code that may perform console I/O.
+# The path is fixed by Powerlevel10k; see the cache note in .zshenv.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ------------------------------
+# 2. Oh My Zsh and prompt
+# ------------------------------
+export ZSH="$XDG_DATA_HOME/oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Preserve the inherited SSH agent (including forwarding), or the macOS
+# YubiKey fallback. Oh My Zsh's ssh-agent plugin would replace that socket.
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zoxide copypath copyfile colored-man-pages)
+
+if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  print -u2 -- "zsh: Oh My Zsh not found at $ZSH"
+fi
+
+[[ -r "$ZDOTDIR/.p10k.zsh" ]] && source "$ZDOTDIR/.p10k.zsh"
+
+# ------------------------------
+# 3. Modern aliases
+# ------------------------------
+alias ls='eza --icons=always --color=always'
+alias ll='eza -lh --icons=always --color=always'
+alias la='eza -lah --icons=always --color=always'
+alias tree='eza --tree --icons=always'
+alias cat='bat --style=plain'
+alias vim='nvim'
+
+# ------------------------------
+# 4. Interactive tool integrations
+# ------------------------------
+# Every integrations/*.zsh loads in file-name order; each file checks for its
+# own tool. Add a file there instead of editing this loop.
+for _zsh_integration in "$ZDOTDIR"/integrations/*.zsh(N); do
+  source "$_zsh_integration"
+done
+unset _zsh_integration

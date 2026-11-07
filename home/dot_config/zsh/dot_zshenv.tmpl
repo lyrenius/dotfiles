@@ -1,0 +1,53 @@
+# XDG base directories. Keep this file limited to environment and path setup;
+# it is sourced by every zsh invocation, including non-interactive shells.
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# Tool state, from toolHomes in .chezmoidata.toml (shared with the macOS
+# GUI environment).
+{{- range $name, $dir := .toolHomes }}
+export {{ $name }}="$XDG_DATA_HOME/{{ $dir }}"
+{{- end }}
+
+# Tool config and caches.
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+
+# Persistent shell state and generated caches.
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-${HOST}-${ZSH_VERSION}"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
+# Powerlevel10k has no setting for its cache location: it always writes
+# $XDG_CACHE_HOME/p10k-{dump,instant-prompt}-$USER.zsh, read in .zshrc.
+
+# User-wide command defaults.
+export EDITOR="nvim"
+export LANG="en_US.UTF-8"
+
+# Platform environment (Homebrew prefix, SSH agent fallback). Platform files
+# only export variables; PATH is assembled below from what they found.
+if [[ "$OSTYPE" == darwin* && -r "$ZDOTDIR/platforms/darwin/env.zsh" ]]; then
+  source "$ZDOTDIR/platforms/darwin/env.zsh"
+fi
+
+# PATH for every zsh, including non-interactive ones. This is the only place
+# the configuration orders its own directories; .zprofile moves ~/.local/bin
+# back to the front after login-shell tools rewrite PATH. typeset -U keeps
+# nested shells from accumulating duplicates.
+typeset -U path PATH
+typeset -a _toolchain_path=()
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/opt/rustup/bin" ]]; then
+  # Homebrew's rustup is keg-only; its proxies precede cargo-installed tools.
+  _toolchain_path+=("$HOMEBREW_PREFIX/opt/rustup/bin")
+fi
+path=(
+  "$HOME/.local/bin"
+  $_toolchain_path
+  "$CARGO_HOME/bin"
+  $path
+)
+unset _toolchain_path
+export PATH

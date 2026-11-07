@@ -1,0 +1,19 @@
+{{- if and (eq .chezmoi.os "darwin") .launchd.env -}}
+#!/bin/sh
+# Give GUI apps the launchd.env values now instead of at the next login,
+# when the com.lyre.environment LaunchAgent sets them. The commands below are
+# rendered from .chezmoidata.toml, so this reruns whenever a value changes.
+# Apps that are already open keep their old environment until relaunched.
+
+set -eu
+
+{{ include ".chezmoitemplates/restore-ui.sh" }}
+
+ui_init
+ui_title "GUI environment"
+{{ includeTemplate "launchd-setenv.sh" . | trim }}
+{{- range .launchd.env }}
+ui_ok "{{ . }}"
+{{- end }}
+ui_note "Relaunch open apps to pick up changes"
+{{ end -}}

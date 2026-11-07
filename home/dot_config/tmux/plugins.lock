@@ -1,0 +1,6 @@
+# tmux plugins: GitHub repository and full commit SHA, in load order.
+# chezmoi's restore script checks these out; load-plugins.sh runs them.
+mrjones2014/smart-splits.nvim 0ab2e4928dc867dfea3ff1da186e69f289d8a532
+tmux-plugins/tmux-cpu bcb110d754ab2417de824c464730c412a3eb2769
+alexwforsythe/tmux-which-key 85fb9756447b989f3b94e515d1e6ee7fec76cba2
+tmux-plugins/tmux-resurrect cff343cf9e81983d3da0c8562b01616f12e8d548

@@ -1,0 +1,9 @@
+.config/tmux/tmux-which-key/REVISION
+.config/tmux/tmux-which-key/README.md
+.config/tmux/tmux-which-key/setup.sh
+.config/nvim/lua/config/vira.lua
+.config/nvim/README.md
+.config/nvim/LICENSE
+.config/nvim/.gitignore
+.config/nvim/.neoconf.json
+Library/LaunchAgents/com.lyre.xdg-codex-home.plist

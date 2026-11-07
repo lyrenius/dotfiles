@@ -38,10 +38,9 @@ alias vim='nvim'
 # ------------------------------
 # 4. Interactive tool integrations
 # ------------------------------
-if (( $+commands[fzf] )); then
-  eval "$(fzf --zsh)"
-fi
-
-[[ -r "$ZDOTDIR/integrations/80-mise.zsh" ]] && source "$ZDOTDIR/integrations/80-mise.zsh"
-[[ -r "$ZDOTDIR/integrations/90-conda.zsh" ]] && source "$ZDOTDIR/integrations/90-conda.zsh"
-[[ -r "$ZDOTDIR/integrations/95-mamba.zsh" ]] && source "$ZDOTDIR/integrations/95-mamba.zsh"
+# Every integrations/*.zsh loads in file-name order; each file checks for its
+# own tool. Add a file there instead of editing this loop.
+for _zsh_integration in "$ZDOTDIR"/integrations/*.zsh(N); do
+  source "$_zsh_integration"
+done
+unset _zsh_integration

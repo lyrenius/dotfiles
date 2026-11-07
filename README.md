@@ -4,12 +4,24 @@ This is the chezmoi source directory. Paths mirror the destination home
 directory: `dot_config` becomes `~/.config`, and `private_Library` becomes
 `~/Library`. Templates and restore scripts live in chezmoi's special directories.
 
+## Shell layout
+
+zsh reads `~/.zshenv` (`dot_zshenv`), which only points `ZDOTDIR` at
+`~/.config/zsh`. Each file there has one phase:
+
+| File | Runs in | Owns |
+| --- | --- | --- |
+| `dot_zshenv` | every zsh | XDG and tool homes, then PATH. The only place the configuration orders its own PATH entries. |
+| `dot_zprofile` | login shells | platform login setup, mise shims, then moving `~/.local/bin` back to the front after macOS `path_helper`, Homebrew, and mise prepend theirs. |
+| `dot_zshrc` | interactive shells | prompt, Oh My Zsh, aliases, then every `integrations/*.zsh` in file-name order. |
+| `platforms/darwin/env.zsh` | every zsh on macOS | Homebrew prefix and the YubiKey agent fallback. Exports variables only, never PATH. |
+| `platforms/darwin/profile.zsh` | login shells on macOS | Homebrew shellenv, OrbStack, and JetBrains Toolbox. |
+
+To add a tool's interactive hook, add `integrations/NN-tool.zsh` that checks
+for the tool itself; `.zshrc` does not need to change.
+
 ## Platform boundaries
 
-- `dot_config/zsh/dot_zshenv`, `dot_zprofile`, `dot_zshrc`, and `integrations/`
-  contain shared shell configuration.
-- `dot_config/zsh/platforms/darwin/` owns macOS environment and login setup:
-  Homebrew, the optional YubiKey agent fallback, OrbStack, and JetBrains Toolbox.
 - `.chezmoiignore.tmpl` excludes the entire `Library` tree, AeroSpace, and the
   Darwin shell directory on other operating systems.
 - Ghostty supports both macOS and Linux; it is not treated as macOS-only.

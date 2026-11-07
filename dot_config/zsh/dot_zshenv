@@ -27,17 +27,27 @@ export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
 export EDITOR="nvim"
 export LANG="en_US.UTF-8"
 
-# Keep user wrappers, Rust proxies, and cargo-installed binaries available without duplicating
-# entries each time a nested shell starts.
-typeset -U path PATH
-path=(
-  "$HOME/.local/bin"
-  "$CARGO_HOME/bin"
-  $path
-)
-
-# Platform-specific environment setup stays separate from shared defaults.
+# Platform environment (Homebrew prefix, SSH agent fallback). Platform files
+# only export variables; PATH is assembled below from what they found.
 if [[ "$OSTYPE" == darwin* && -r "$ZDOTDIR/platforms/darwin/env.zsh" ]]; then
   source "$ZDOTDIR/platforms/darwin/env.zsh"
 fi
+
+# PATH for every zsh, including non-interactive ones. This is the only place
+# the configuration orders its own directories; .zprofile moves ~/.local/bin
+# back to the front after login-shell tools rewrite PATH. typeset -U keeps
+# nested shells from accumulating duplicates.
+typeset -U path PATH
+typeset -a _toolchain_path=()
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/opt/rustup/bin" ]]; then
+  # Homebrew's rustup is keg-only; its proxies precede cargo-installed tools.
+  _toolchain_path+=("$HOMEBREW_PREFIX/opt/rustup/bin")
+fi
+path=(
+  "$HOME/.local/bin"
+  $_toolchain_path
+  "$CARGO_HOME/bin"
+  $path
+)
+unset _toolchain_path
 export PATH

@@ -1,4 +1,6 @@
-# macOS-only environment setup. Avoid launching commands in every zsh process.
+# macOS-only environment, sourced from .zshenv before PATH is assembled.
+# Export variables only: .zshenv owns PATH. Avoid launching commands here,
+# since every zsh process runs this file.
 export CP_HOME_DIR="$XDG_DATA_HOME/cocoapods"
 export SHELL_SESSIONS_DISABLE=1
 
@@ -15,10 +17,6 @@ for _brew_prefix in "${HOMEBREW_PREFIX:-}" "$_brew_path_prefix" /opt/homebrew /u
   # Never replace an inherited agent, especially an SSH-forwarded socket.
   if [[ -z "${SSH_AUTH_SOCK:-}" && -S "$HOMEBREW_PREFIX/var/run/yubikey-agent.sock" ]]; then
     export SSH_AUTH_SOCK="$HOMEBREW_PREFIX/var/run/yubikey-agent.sock"
-  fi
-
-  if [[ -d "$HOMEBREW_PREFIX/opt/rustup/bin" ]]; then
-    path=("$HOME/.local/bin" "$HOMEBREW_PREFIX/opt/rustup/bin" $path)
   fi
   break
 done

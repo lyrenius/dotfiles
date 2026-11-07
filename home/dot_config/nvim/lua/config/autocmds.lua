@@ -1,17 +1,5 @@
-local indent_group = vim.api.nvim_create_augroup("lyre_four_space_indent", { clear = true })
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = indent_group,
-    pattern = "*",
-    callback = function(args)
-        local options = vim.bo[args.buf]
-        options.tabstop = 4
-        options.shiftwidth = 4
-        options.softtabstop = 4
-        -- Make recipes require a literal tab; all other configured filetypes use spaces.
-        options.expandtab = options.filetype ~= "make"
-    end,
-})
+-- Indentation defaults (4 spaces) live in options.lua. Filetype plugins and
+-- .editorconfig files may set their own; they are not overridden here.
 
 -- Keep CUDA semantic highlighting enabled explicitly.
 vim.api.nvim_create_autocmd("LspAttach", {

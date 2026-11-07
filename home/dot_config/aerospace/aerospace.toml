@@ -20,7 +20,9 @@ automatically-unhide-macos-hidden-apps = false
 focus-follows-mouse.enabled = false
 
 # Workspaces
-persistent-workspaces = ['1', '2', '3', '4', '5', '7', '8', '9', '0']
+# 9 keeps the accordion layout set by after-startup-command; 0 is the
+# floating fallback. Other workspaces exist only while they hold windows.
+persistent-workspaces = ['9', '0']
 
 # Gaps
 gaps.inner.horizontal = 6

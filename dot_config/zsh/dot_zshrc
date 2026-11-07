@@ -12,8 +12,8 @@ fi
 export ZSH="$XDG_DATA_HOME/oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# YubiKey provides SSH_AUTH_SOCK, so loading Oh My Zsh's ssh-agent plugin would
-# start a second agent and then immediately replace its socket.
+# Preserve the inherited SSH agent (including forwarding), or the macOS
+# YubiKey fallback. Oh My Zsh's ssh-agent plugin would replace that socket.
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting zoxide copypath copyfile colored-man-pages)
 
 if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then

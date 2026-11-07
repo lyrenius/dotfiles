@@ -1,3 +1,4 @@
+{{- if .restore.tmux -}}
 #!/bin/sh
 
 set -eu
@@ -100,3 +101,4 @@ else
 fi
 
 ui_done "tmux ready · $plugin_count plugins"
+{{ end -}}

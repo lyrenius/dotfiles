@@ -1,3 +1,4 @@
+{{- if .restore.yazi -}}
 #!/bin/sh
 
 set -eu
@@ -57,3 +58,4 @@ done
 ui_ok "Plugin check · $plugin_count/$plugin_count"
 
 ui_done "Yazi ready · v$yazi_version"
+{{ end -}}

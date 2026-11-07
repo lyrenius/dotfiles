@@ -13,7 +13,6 @@ export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export GROK_HOME="$XDG_DATA_HOME/grok"
 export CLAUDE_CONFIG_DIR="$XDG_DATA_HOME/claude"
-export CP_HOME_DIR="$XDG_DATA_HOME/cocoapods"
 export COPILOT_HOME="$XDG_DATA_HOME/copilot"
 export CODEX_HOME="$XDG_DATA_HOME/codex"
 
@@ -23,10 +22,8 @@ export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-${HOST}-${ZSH_VERSION}"
 export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
 export P10K_DUMP_FILE="$XDG_CACHE_HOME/zsh/p10k-dump-lyre.zsh"
 export P10K_INSTANT_PROMPT_FILE="$XDG_CACHE_HOME/zsh/p10k-instant-prompt-lyre.zsh"
-export SHELL_SESSIONS_DISABLE=1
 
 # User-wide command defaults.
-export SSH_AUTH_SOCK="/opt/homebrew/var/run/yubikey-agent.sock"
 export EDITOR="nvim"
 export LANG="en_US.UTF-8"
 
@@ -35,8 +32,12 @@ export LANG="en_US.UTF-8"
 typeset -U path PATH
 path=(
   "$HOME/.local/bin"
-  "/opt/homebrew/opt/rustup/bin"
   "$CARGO_HOME/bin"
   $path
 )
+
+# Platform-specific environment setup stays separate from shared defaults.
+if [[ "$OSTYPE" == darwin* && -r "$ZDOTDIR/platforms/darwin/env.zsh" ]]; then
+  source "$ZDOTDIR/platforms/darwin/env.zsh"
+fi
 export PATH

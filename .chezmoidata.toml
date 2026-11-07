@@ -1,0 +1,11 @@
+# Shared defaults. Override per machine in ~/.config/chezmoi/chezmoi.toml
+# under [data.features] and [data.restore].
+[features]
+zsh = true
+
+# Plugin restoration is separate from deploying configuration files.
+# These defaults preserve the full development environment on this Mac.
+[restore]
+tmux = true
+yazi = true
+neovim = true

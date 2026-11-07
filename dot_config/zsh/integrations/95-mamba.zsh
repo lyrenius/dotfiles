@@ -1,9 +1,15 @@
 # Keep Mamba's interactive shell hook in chezmoi instead of letting
 # `mamba shell init` create a separate ~/.zshrc outside ZDOTDIR.
-_mamba_executable="/opt/homebrew/Caskroom/miniconda/base/bin/mamba"
-_mamba_root_prefix="/opt/homebrew/Caskroom/miniconda/base"
+_mamba_executable="${MAMBA_EXE:-}"
+if [[ ! -x "$_mamba_executable" ]]; then
+  _mamba_executable="${commands[mamba]:-}"
+fi
+if [[ ! -x "$_mamba_executable" && -n "${CONDA_EXE:-}" ]]; then
+  _mamba_executable="${CONDA_EXE:A:h:h}/bin/mamba"
+fi
 
 if [[ -x "$_mamba_executable" ]]; then
+  _mamba_root_prefix="${MAMBA_ROOT_PREFIX:-${_mamba_executable:A:h:h}}"
   export MAMBA_EXE="$_mamba_executable"
   export MAMBA_ROOT_PREFIX="$_mamba_root_prefix"
 

@@ -20,8 +20,8 @@ export CODEX_HOME="$XDG_DATA_HOME/codex"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-${HOST}-${ZSH_VERSION}"
 export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
-export P10K_DUMP_FILE="$XDG_CACHE_HOME/zsh/p10k-dump-lyre.zsh"
-export P10K_INSTANT_PROMPT_FILE="$XDG_CACHE_HOME/zsh/p10k-instant-prompt-lyre.zsh"
+# Powerlevel10k has no setting for its cache location: it always writes
+# $XDG_CACHE_HOME/p10k-{dump,instant-prompt}-$USER.zsh, read in .zshrc.
 
 # User-wide command defaults.
 export EDITOR="nvim"

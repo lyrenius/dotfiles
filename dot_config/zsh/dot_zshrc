@@ -2,8 +2,9 @@
 # 1. Powerlevel10k instant prompt
 # ------------------------------
 # Keep this near the top, before startup code that may perform console I/O.
-if [[ -r "$P10K_INSTANT_PROMPT_FILE" ]]; then
-  source "$P10K_INSTANT_PROMPT_FILE"
+# The path is fixed by Powerlevel10k; see the cache note in .zshenv.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # ------------------------------

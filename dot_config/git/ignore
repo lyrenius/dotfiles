@@ -1,0 +1,25 @@
+# macOS Finder metadata
+.DS_Store
+.localized
+.AppleDouble
+.LSOverride
+Icon[]
+
+# AppleDouble resource forks and macOS archive metadata
+._*
+__MACOSX/
+
+# Volume metadata, indexes, and temporary files
+.DocumentRevisions-V100/
+.fseventsd/
+.Spotlight-V100/
+.TemporaryItems/
+.Trashes/
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.com.apple.timemachine.supported
+
+# Apple file-sharing metadata
+.AppleDB
+.AppleDesktop
+.apdisk

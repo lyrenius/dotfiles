@@ -17,3 +17,7 @@ export PATH
 if [[ -x /opt/homebrew/bin/mise ]]; then
   eval "$(/opt/homebrew/bin/mise activate zsh --shims)"
 fi
+
+# Keep user wrappers first after Homebrew and toolchain PATH setup.
+path=("$HOME/.local/bin" $path)
+export PATH

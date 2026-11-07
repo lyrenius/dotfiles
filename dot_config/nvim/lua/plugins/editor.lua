@@ -87,6 +87,7 @@ return {
             clangd.filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
             clangd.cmd = {
                 "clangd",
+                "--log=error",
                 "--background-index",
                 "--clang-tidy",
                 "--header-insertion=never",

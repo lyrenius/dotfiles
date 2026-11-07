@@ -30,10 +30,11 @@ export SSH_AUTH_SOCK="/opt/homebrew/var/run/yubikey-agent.sock"
 export EDITOR="nvim"
 export LANG="en_US.UTF-8"
 
-# Keep Rust proxies and cargo-installed binaries available without duplicating
+# Keep user wrappers, Rust proxies, and cargo-installed binaries available without duplicating
 # entries each time a nested shell starts.
 typeset -U path PATH
 path=(
+  "$HOME/.local/bin"
   "/opt/homebrew/opt/rustup/bin"
   "$CARGO_HOME/bin"
   $path

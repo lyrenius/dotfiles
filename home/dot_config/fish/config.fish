@@ -5,7 +5,15 @@ fish_add_path --global --prepend --move $HOME/.local/bin
 
 status is-interactive; or return
 
-set -g fish_greeting
+# Greeting: fastfetch's system summary, as in CachyOS's fish config; none where
+# fastfetch is not installed.
+if command -q fastfetch
+    function fish_greeting
+        fastfetch
+    end
+else
+    set -g fish_greeting
+end
 
 # Prompt: ~/.config/starship.toml.
 if command -q starship

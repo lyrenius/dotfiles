@@ -40,6 +40,7 @@ prompt (`home/dot_config/starship.toml`) are deployed. fish reads every
 | `conf.d/15-shortcuts.fish` | interactive | `!!` and `!$` history expansion, and `..`, `...`, … as `cd ../`, `cd ../../`, …. |
 | `conf.d/20-fzf.fish`, `30-zoxide.fish`, `80-mise.fish` … `95-mamba.fish` | interactive (mise also elsewhere, as shims) | tool hooks, as in zsh's `integrations/`. |
 | `conf.d/40-done.fish` | interactive, where CachyOS ships done | notifications for long commands that finish in the background. |
+| `conf.d/45-gpg.fish` | interactive, with gpg installed | `GPG_TTY`, as zsh's `integrations/45-gpg.zsh` (see Platform boundaries). |
 | `conf.d/50-linux.fish` | interactive, deployed on Linux only | system and pacman abbreviations. |
 | `functions/backup.fish` | when first called | `backup FILE...` copies each file to `FILE.bak`. |
 | `config.fish` | interactive | the fastfetch greeting and the starship prompt. |
@@ -152,7 +153,12 @@ tools/vira-nvim.py                     # regenerate every variant
 - Ghostty supports both macOS and Linux; it is not treated as macOS-only.
 
 An inherited `SSH_AUTH_SOCK` is preserved. The macOS YubiKey socket is selected
-only when the variable is empty and that socket exists. Conda and Mamba use
+only when the variable is empty and that socket exists. Interactive shells with
+gpg installed export `GPG_TTY` (zsh's `integrations/45-gpg.zsh`, fish's
+`conf.d/45-gpg.fish`): without a graphical session, pinentry falls back to its
+curses or tty prompt, which needs it. pinentry-mac ignores it. There is no
+`gpg-connect-agent updatestartuptty`, because SSH authentication goes through
+yubikey-agent rather than gpg-agent. Conda and Mamba use
 their configured executables or commands on PATH instead of a fixed Caskroom
 installation. An existing `MAMBA_ROOT_PREFIX` is preserved.
 

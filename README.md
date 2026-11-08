@@ -43,7 +43,7 @@ prompt (`home/dot_config/starship.toml`) are deployed. fish reads every
 | `conf.d/45-gpg.fish` | interactive, with gpg installed | `GPG_TTY`, as zsh's `integrations/45-gpg.zsh` (see Platform boundaries). |
 | `conf.d/50-linux.fish` | interactive, deployed on Linux only | system and pacman abbreviations. |
 | `functions/backup.fish` | when first called | `backup FILE...` copies each file to `FILE.bak`. |
-| `config.fish` | interactive | the fastfetch greeting and the starship prompt. |
+| `config.fish` | interactive | the fastfetch greeting and the starship prompt (erasing pure's new-line hook first, see CachyOS). |
 
 The prompt keeps the zsh layout (two lines, left frame, dotted gap, details on
 the right) as plain colored text in the Vira Graphene palette, with three
@@ -77,9 +77,13 @@ interactive `history delete`), `copy` (it calls a `trim-right` command that does
 not exist), `untar` (gzip only; `tar -xf` detects the format), the `dir`,
 `vdir`, `grep`, `fgrep`, and `egrep` color aliases, and `apt`/`apt-get`.
 
-The package's dependencies still load on their own: fish-autopair, pkgfile's
-command-not-found suggestions, and the pure prompt's `conf.d`. starship replaces
-pure's prompt, but pure still sets its universal defaults and the window title.
+The package stays installed for done, and its dependencies still load on their
+own: fish-autopair, pkgfile's command-not-found suggestions, and the pure
+prompt's `conf.d`. starship replaces pure's prompt, but not the
+`_pure_prompt_new_line` handler pure hooks on every `fish_prompt` event, which
+would add a blank line to starship's own; where starship is installed,
+`config.fish` erases that function, which also removes the hook. pure still sets
+its universal defaults and the window title.
 
 The CachyOS file stored some universal variables, which outlive it. After the
 first `chezmoi apply`, remove its done settings, then check `fish_user_paths`

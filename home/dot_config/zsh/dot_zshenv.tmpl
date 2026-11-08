@@ -49,5 +49,9 @@ path=(
   "$CARGO_HOME/bin"
   $path
 )
+# Arch's rustup keeps its rust-analyzer proxy in /usr/lib/rustup/bin, outside
+# the default PATH; add it after the system directories, as fish's
+# conf.d/00-environment.fish does.
+[[ -d /usr/lib/rustup/bin ]] && path+=(/usr/lib/rustup/bin)
 unset _toolchain_path
 export PATH

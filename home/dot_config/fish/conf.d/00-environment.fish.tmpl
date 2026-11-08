@@ -27,3 +27,10 @@ if set -q HOMEBREW_PREFIX; and test -d $HOMEBREW_PREFIX/opt/rustup/bin
     set toolchain_path $HOMEBREW_PREFIX/opt/rustup/bin
 end
 fish_add_path --global --prepend --move $HOME/.local/bin $toolchain_path $CARGO_HOME/bin
+
+# Arch's rustup puts every proxy in /usr/bin except rust-analyzer, which lives in
+# /usr/lib/rustup/bin; its own fish snippet adds that directory for login shells
+# only. Add it for every fish, after the system directories as that snippet
+# does. --path edits PATH itself: fish_user_paths always precedes the system
+# directories, even with --append.
+fish_add_path --global --path --append /usr/lib/rustup/bin

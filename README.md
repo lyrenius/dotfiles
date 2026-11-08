@@ -18,7 +18,7 @@ zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
 
 | File | Runs in | Owns |
 | --- | --- | --- |
-| `dot_zshenv` | every zsh | XDG and tool homes, then PATH. The only place the configuration orders its own PATH entries. |
+| `dot_zshenv` | every zsh | XDG and tool homes, then PATH. The only place the configuration orders its own PATH entries. On Arch, `/usr/lib/rustup/bin` (rustup's rust-analyzer proxy) goes after the system directories. |
 | `dot_zprofile` | login shells | platform login setup, mise shims, then moving `~/.local/bin` back to the front after macOS `path_helper`, Homebrew, and mise prepend theirs. |
 | `dot_zshrc` | interactive shells | prompt, Oh My Zsh, aliases, then every `integrations/*.zsh` in file-name order. |
 | `platforms/darwin/env.zsh` | every zsh on macOS | Homebrew prefix and the YubiKey agent fallback. Exports variables only, never PATH. |
@@ -35,7 +35,7 @@ prompt (`home/dot_config/starship.toml`) are deployed. fish reads every
 
 | File | Runs in | Owns |
 | --- | --- | --- |
-| `conf.d/00-environment.fish` | every fish | the same environment as `.zshenv`: XDG and tool homes, `EDITOR`, `LANG`, PATH. |
+| `conf.d/00-environment.fish` | every fish | the same environment as `.zshenv`: XDG and tool homes, `EDITOR`, `LANG`, PATH. On Arch, `/usr/lib/rustup/bin` goes after the system directories in every fish; Arch's own fish snippet adds it to login shells only. |
 | `conf.d/10-aliases.fish` | interactive | the `.zshrc` aliases, each only when its tool is installed; bat as `MANPAGER`; `tarnow`, `wget -c`, `tb`. |
 | `conf.d/15-shortcuts.fish` | interactive | `!!` and `!$` history expansion, and `..`, `...`, … as `cd ../`, `cd ../../`, …. |
 | `conf.d/20-fzf.fish`, `30-zoxide.fish`, `80-mise.fish` … `95-mamba.fish` | interactive (mise also elsewhere, as shims) | tool hooks, as in zsh's `integrations/`. |

@@ -80,10 +80,13 @@ not exist), `untar` (gzip only; `tar -xf` detects the format), the `dir`,
 The package stays installed for done, and its dependencies still load on their
 own: fish-autopair, pkgfile's command-not-found suggestions, and the pure
 prompt's `conf.d`. starship replaces pure's prompt, but not the
-`_pure_prompt_new_line` handler pure hooks on every `fish_prompt` event, which
-would add a blank line to starship's own; where starship is installed,
-`config.fish` erases that function, which also removes the hook. pure still sets
-its universal defaults and the window title.
+`_pure_prompt_new_line` handler pure hooks on every `fish_prompt` event. That
+handler clears the line before each prompt and, once pure's own prompt has been
+drawn in the session (when starship is sourced by hand into a running shell, for
+example), adds a blank line to starship's. Where starship is installed,
+`config.fish` erases that function, which also removes the hook:
+`functions --handlers` no longer lists it. pure still sets its universal
+defaults and the window title.
 
 The CachyOS file stored some universal variables, which outlive it. After the
 first `chezmoi apply`, remove its done settings, then check `fish_user_paths`

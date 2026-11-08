@@ -19,8 +19,10 @@ end
 if command -q starship
     # pure, a dependency of cachyos-fish-config, loads from vendor_conf.d
     # whatever this file says, and hooks _pure_prompt_new_line on every
-    # fish_prompt event. starship replaces pure's prompt but not that hook, and
-    # adds its own blank line. Erasing the function also removes the hook.
+    # fish_prompt event. starship replaces pure's prompt but not that hook,
+    # which clears the line before each prompt and, once pure's own prompt has
+    # been drawn in the session, adds a blank line to starship's. Erasing the
+    # function also removes the hook.
     functions -q _pure_prompt_new_line; and functions --erase _pure_prompt_new_line
     starship init fish | source
 end

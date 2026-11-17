@@ -138,6 +138,10 @@ run = 'move-node-to-workspace 2'
 if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace 2'
 
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen'
+run = 'move-node-to-workspace 2'
+
 # 3: code
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'

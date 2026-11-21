@@ -2,9 +2,11 @@
 # under [data.features] and [data.restore].
 
 # Shell configuration is opt-in: each machine enables the shell it uses.
+# Hyprland is opt-in too, so Linux machines without a desktop skip it.
 [features]
 zsh = false
 fish = false
+hyprland = false
 
 # Plugin restoration is separate from deploying configuration files.
 # These defaults preserve the full development environment on this Mac.

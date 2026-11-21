@@ -6,6 +6,9 @@
 .config/fish
 .config/starship.toml
 {{ end -}}
+{{ if or (not .features.hyprland) (ne .chezmoi.os "linux") -}}
+.config/hypr
+{{ end -}}
 {{ if ne .chezmoi.os "darwin" -}}
 Library
 .config/aerospace

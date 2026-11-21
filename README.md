@@ -98,6 +98,89 @@ set -eU __done_min_cmd_duration __done_notification_urgency_level
 set -S fish_user_paths
 ```
 
+## Hyprland
+
+Where `features.hyprland` is enabled (Linux only), `home/dot_config/hypr/` is
+deployed. Hyprland 0.55 and later read a Lua configuration, and 0.57 dropped
+`hyprland.conf`. The configuration ports AeroSpace's (see Key mapping) onto
+CachyOS's Hyprland edition, whose Noctalia shell provides the bar, launcher,
+notifications, lock screen, wallpaper, screenshots and clipboard.
+
+| File | Owns |
+| --- | --- |
+| `hyprland.lua` | loads each `config/` file, then `local.lua` if it exists. |
+| `config/binds.lua` | the AeroSpace bindings and its service and resize modes (as submaps), then the preset's Noctalia, launcher and hardware-key bindings. |
+| `config/windowrules.lua` | AeroSpace's workspace assignments and floating apps, the preset's dialog, picture-in-picture and gaming rules, and Noctalia's layer rule. |
+| `config/workspaces.lua` | workspace 10, the floating fallback, kept while empty. |
+| `config/decorations.lua.tmpl` | gaps, borders and group colors from `palette`, rounding, blur. |
+| `config/monitors.lua`, `inputs.lua`, `animations.lua`, `misc.lua`, `autostart.lua` | the remaining settings; the autostart starts Noctalia. |
+| `xdph.conf` | xdg-desktop-portal-hyprland: screen sharing may reuse a granted token. |
+
+`config/` is an exact directory: chezmoi deletes files in it that it does not
+manage. Put machine-specific settings, such as a monitor's mode, in
+`~/.config/hypr/local.lua`, which chezmoi leaves alone:
+
+```lua
+hl.monitor({ output = "DP-4", mode = "2560x1440@180", position = "auto", scale = 1 })
+```
+
+Rules match the class and title a window has when it opens; `hyprctl clients`
+shows them. Classes marked "unchecked" in `windowrules.lua` come from desktop
+files and should be confirmed on a running window.
+
+### Key mapping
+
+AeroSpace's ctrl is SUPER, and its cmd is CTRL:
+
+| AeroSpace | Hyprland |
+| --- | --- |
+| `cmd-ctrl-enter` | `CTRL+SUPER+Return` focuses a Ghostty window, or opens one on workspace 1, like `open -a Ghostty`. `SUPER+Return` always opens a new one. |
+| `cmd-ctrl-hjkl`, `ctrl-shift-hjkl` | `CTRL+SUPER+hjkl` focuses, `SUPER+SHIFT+hjkl` moves. |
+| `ctrl-1` … `ctrl-0`, `` ctrl-` `` | `SUPER+1` … `SUPER+0`, `SUPER+grave`. Hyprland numbers workspaces from 1, so key 0 is workspace 10. |
+| `cmd-ctrl-1` … `cmd-ctrl-0` | `CTRL+SUPER+1` … `CTRL+SUPER+0` send the window without following it; 0 also floats it. |
+| `ctrl-semicolon` | `SUPER+semicolon` enters the service submap; `r` there enters resize; Escape leaves either. |
+
+The default dwindle layout chooses split directions itself, so the service
+commands that edit AeroSpace's tree have only near equivalents:
+
+- `v` and `s` set where the next window opens, and `/` flips the current split.
+- `a` (accordion) and `hjkl` (join) make or join a tabbed group.
+- `b` (balance) evens out the current split, not the whole workspace, and so
+  does `b` in resize mode.
+- resize mode's `-` and `=` resize both ways, since there is no parent
+  orientation to follow.
+- `t` (flatten-workspace-tree) has none and is left out.
+- workspace 9 is an ordinary workspace: no chat app is installed on Linux.
+
+From the preset, the bindings that do not collide with these remain: Noctalia's
+launcher (`SUPER+Space`), clipboard (`SUPER+V`), window switcher (`SUPER+Tab`),
+lock (`SUPER+L`), notifications, control center and screenshots (`Print`),
+`SUPER+Q` to close a window, the arrow keys, the scratchpad (`SUPER+S`), and the
+hardware keys. Its per-monitor workspace scheme (`SUPER+1/2/3` for monitors,
+`SUPER+ALT` and `SUPER+CTRL` with digits) is gone, as are window swallowing,
+inactive-window transparency, and the touchpad gestures.
+
+On Linux, Ghostty copies a selection with Ctrl + C, like Cmd + C on macOS,
+and passes Ctrl + C through when nothing is selected. Paste stays
+Ctrl + Shift + V, because Ctrl + V is block selection in Vim and in tmux copy
+mode.
+
+### Replacing the CachyOS preset
+
+The `cachyos-hypr-noctalia` package copies its configuration from
+`/etc/skel/.config/hypr` once, when the user is created, and never updates it,
+so nothing is lost by taking it over. Before the first `chezmoi apply`, back up
+`~/.config/hypr`. Check the result without reloading the running session:
+
+```sh
+mkdir -p /tmp/hypr-check
+chezmoi archive ~/.config/hypr | tar -xzf - -C /tmp/hypr-check
+Hyprland --verify-config -c /tmp/hypr-check/.config/hypr/hyprland.lua
+```
+
+Hyprland reloads the configuration as soon as `chezmoi apply` writes it;
+`hyprctl configerrors` lists what it rejected.
+
 ## Tool homes and GUI apps
 
 `toolHomes` in `home/.chezmoidata.toml` lists the tools whose state moved under
@@ -156,7 +239,8 @@ tools/vira-nvim.py                     # regenerate every variant
 
 - `.chezmoiignore.tmpl` excludes the entire `Library` tree, AeroSpace, and the
   Darwin shell directory on other operating systems, and fish's
-  `conf.d/50-linux.fish` on every system but Linux.
+  `conf.d/50-linux.fish` and Hyprland's `~/.config/hypr` on every system but
+  Linux.
 - Ghostty supports both macOS and Linux; it is not treated as macOS-only.
 
 An inherited `SSH_AUTH_SOCK` is preserved. The macOS YubiKey socket is selected
@@ -187,6 +271,14 @@ zsh = true    # or: fish = true
 
 Turning it off later leaves the deployed files in place, but chezmoi stops
 updating them.
+
+The Hyprland configuration (`~/.config/hypr/`) is opt-in the same way, so Linux
+machines without a desktop skip it:
+
+```toml
+[data.features]
+hyprland = true
+```
 
 Plugin restores are enabled by default. To skip some on a machine with a
 smaller tool set:

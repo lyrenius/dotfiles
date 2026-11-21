@@ -1,0 +1,63 @@
+-- Look and feel, in the Vira Graphene palette from .chezmoidata.toml.
+
+local accent     = "rgb({{ trimPrefix "#" .palette.accent }})"
+local border     = "rgb({{ trimPrefix "#" .palette.border }})"
+local subtle     = "rgb({{ trimPrefix "#" .palette.subtle }})"
+local muted      = "rgb({{ trimPrefix "#" .palette.muted }})"
+local foreground = "rgb({{ trimPrefix "#" .palette.foreground }})"
+local gold       = "rgb({{ trimPrefix "#" .palette.gold }})"
+
+hl.config({
+    general = {
+        -- gaps_in surrounds each window, so neighbors are 6 px apart, as in
+        -- AeroSpace's gaps.inner.
+        gaps_in  = 3,
+        gaps_out = 6,
+
+        border_size = 2,
+        extend_border_grab_area = 10,
+        resize_on_border = true,
+
+        col = {
+            active_border   = accent,
+            inactive_border = border,
+        },
+    },
+
+    -- Groups (tabbed windows) stand in for AeroSpace's accordion.
+    group = {
+        col = {
+            border_active          = accent,
+            border_inactive        = border,
+            border_locked_active   = gold,
+            border_locked_inactive = subtle,
+        },
+        groupbar = {
+            text_color          = foreground,
+            text_color_inactive = muted,
+            col = {
+                active          = accent,
+                inactive        = border,
+                locked_active   = gold,
+                locked_inactive = subtle,
+            },
+        },
+    },
+
+    -- Windows stay opaque; Ghostty sets its own background opacity.
+    decoration = {
+        rounding = 10,
+        dim_special = 0.3,
+        blur = {
+            size = 5,
+            passes = 4,
+            special = true,
+        },
+    },
+
+    misc = {
+        col = {
+            splash = accent,
+        },
+    },
+})

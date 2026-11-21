@@ -21,3 +21,12 @@ mouse-shift-capture = never
 # --- Background Configuration
 
 background-opacity = 0.95
+{{- if eq .chezmoi.os "linux" }}
+
+# --- Keybind Configuration ---
+
+# Linux only. With text selected, Ctrl + C copies it, like Cmd + C on macOS;
+# otherwise Ctrl + C reaches the shell as usual. Paste stays Ctrl + Shift + V,
+# because Ctrl + V is block selection in Vim and in tmux copy mode.
+keybind = performable:ctrl+c=copy_to_clipboard
+{{- end }}

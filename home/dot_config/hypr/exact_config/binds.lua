@@ -18,8 +18,15 @@ local directions = { h = "left", j = "down", k = "up", l = "right" }
 
 -- AEROSPACE: MAIN -----------------------------------------------------
 
+-- The window rule puts every Ghostty window on workspace 1 without switching
+-- to it, so go there first, or the new window would open out of sight.
+local function openGhostty(args)
+    hl.dispatch(hl.dsp.focus({ workspace = 1 }))
+    hl.dispatch(hl.dsp.exec_cmd(launch .. terminal .. (args or "")))
+end
+
 -- Like `open -a Ghostty`: focus a Ghostty window if there is one, otherwise
--- go to workspace 1, where the window rule puts Ghostty, and open one there.
+-- open one.
 local function focusOrOpenGhostty()
     for _, window in ipairs(hl.get_windows()) do
         if window.class == "com.mitchellh.ghostty" then
@@ -27,8 +34,7 @@ local function focusOrOpenGhostty()
             return
         end
     end
-    hl.dispatch(hl.dsp.focus({ workspace = 1 }))
-    hl.dispatch(hl.dsp.exec_cmd(launch .. terminal))
+    openGhostty()
 end
 
 hl.bind("CTRL + SUPER + Return", focusOrOpenGhostty)
@@ -161,13 +167,13 @@ hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special" }))
 
 -- LAUNCHER ------------------------------------------------------------
 
-hl.bind("SUPER + Return",        hl.dsp.exec_cmd(launch .. terminal))
+hl.bind("SUPER + Return",        function() openGhostty() end)
 hl.bind("SUPER + E",             hl.dsp.exec_cmd(launch .. fileManager))
 hl.bind("SUPER + T",             hl.dsp.exec_cmd(launch .. editor))
 hl.bind("SUPER + C",             hl.dsp.exec_cmd(launch .. calculator))
 hl.bind("XF86Calculator",        hl.dsp.exec_cmd(launch .. calculator))
 hl.bind("SUPER + W",             hl.dsp.exec_cmd(launch .. browser))
-hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd(launch .. terminal .. " -e btop"))
+hl.bind("CTRL + SHIFT + Escape", function() openGhostty(" -e btop") end)
 
 hl.bind("SUPER + Space",   hl.dsp.exec_cmd(noctalia .. "panel-toggle launcher"))
 hl.bind("SUPER + period",  hl.dsp.exec_cmd(noctalia .. "panel-toggle launcher /emo"))

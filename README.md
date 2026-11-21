@@ -134,7 +134,7 @@ AeroSpace's ctrl is SUPER, and its cmd is CTRL:
 
 | AeroSpace | Hyprland |
 | --- | --- |
-| `cmd-ctrl-enter` | `CTRL+SUPER+Return` focuses a Ghostty window, or opens one on workspace 1, like `open -a Ghostty`. `SUPER+Return` always opens a new one. |
+| `cmd-ctrl-enter` | `CTRL+SUPER+Return` focuses a Ghostty window, or opens one, like `open -a Ghostty`. `SUPER+Return` always opens a new one. Ghostty windows open on workspace 1, so both switch there first. |
 | `cmd-ctrl-hjkl`, `ctrl-shift-hjkl` | `CTRL+SUPER+hjkl` focuses, `SUPER+SHIFT+hjkl` moves. |
 | `ctrl-1` … `ctrl-0`, `` ctrl-` `` | `SUPER+1` … `SUPER+0`, `SUPER+grave`. Hyprland numbers workspaces from 1, so key 0 is workspace 10. |
 | `cmd-ctrl-1` … `cmd-ctrl-0` | `CTRL+SUPER+1` … `CTRL+SUPER+0` send the window without following it; 0 also floats it. |

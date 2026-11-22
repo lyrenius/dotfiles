@@ -126,6 +126,7 @@ if.app-id = 'com.mitchellh.ghostty'
 run = [
     'move-node-to-workspace 1',
     'layout floating',
+    'fullscreen on',
 ]
 
 

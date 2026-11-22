@@ -1,6 +1,6 @@
 [user]
 	name = Junbo Niu
 	email = njb25@mails.tsinghua.edu.cn
-	signingkey = 71A4E9AA41EDE2238BA708624BF0FDA2455CE97C
+	signingkey = 91CE1AC410B540C1E148421A57D52DD7990C040B
 [init]
 	defaultBranch = main

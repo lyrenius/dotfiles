@@ -20,7 +20,7 @@ zsh reads `~/.zshenv` (`home/dot_zshenv`), which only points `ZDOTDIR` at
 | --- | --- | --- |
 | `dot_zshenv` | every zsh | XDG and tool homes, then PATH. The only place the configuration orders its own PATH entries. On Arch, `/usr/lib/rustup/bin` (rustup's rust-analyzer proxy) goes after the system directories. |
 | `dot_zprofile` | login shells | platform login setup, mise shims, then moving `~/.local/bin` back to the front after macOS `path_helper`, Homebrew, and mise prepend theirs. |
-| `dot_zshrc` | interactive shells | prompt, Oh My Zsh, aliases, then every `integrations/*.zsh` in file-name order. |
+| `dot_zshrc` | interactive shells | history file, prompt, Oh My Zsh, aliases, then every `integrations/*.zsh` in file-name order. It sets `HISTFILE` again because macOS's `/etc/zshrc` resets it after `.zshenv`. |
 | `platforms/darwin/env.zsh` | every zsh on macOS | Homebrew prefix and the YubiKey agent fallback. Exports variables only, never PATH. |
 | `platforms/darwin/profile.zsh` | login shells on macOS | Homebrew shellenv, OrbStack, and JetBrains Toolbox. |
 

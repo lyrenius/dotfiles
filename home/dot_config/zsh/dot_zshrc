@@ -8,7 +8,16 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ------------------------------
-# 2. Oh My Zsh and prompt
+# 2. History file
+# ------------------------------
+# .zshenv exports HISTFILE, but macOS's /etc/zshrc runs after it and resets
+# HISTFILE to $ZDOTDIR/.zsh_history. Set it again before Oh My Zsh, which
+# only fills in HISTFILE when it is empty.
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+[[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
+
+# ------------------------------
+# 3. Oh My Zsh and prompt
 # ------------------------------
 export ZSH="$XDG_DATA_HOME/oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -26,7 +35,7 @@ fi
 [[ -r "$ZDOTDIR/.p10k.zsh" ]] && source "$ZDOTDIR/.p10k.zsh"
 
 # ------------------------------
-# 3. Modern aliases
+# 4. Modern aliases
 # ------------------------------
 alias ls='eza --icons=always --color=always'
 alias ll='eza -lh --icons=always --color=always'
@@ -36,7 +45,7 @@ alias cat='bat --style=plain'
 alias vim='nvim'
 
 # ------------------------------
-# 4. Interactive tool integrations
+# 5. Interactive tool integrations
 # ------------------------------
 # Every integrations/*.zsh loads in file-name order; each file checks for its
 # own tool. Add a file there instead of editing this loop.

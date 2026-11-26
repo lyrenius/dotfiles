@@ -3,7 +3,10 @@
 # General
 config-version = 2
 
-after-startup-command = ['layout --workspace 9 --root h_accordion']
+after-startup-command = [
+    'layout --workspace 9 --root h_accordion',
+    'layout --workspace 4 --root h_accordion',
+]
 start-at-login = true
 auto-reload-config = true
 
@@ -20,9 +23,9 @@ automatically-unhide-macos-hidden-apps = false
 focus-follows-mouse.enabled = false
 
 # Workspaces
-# 9 keeps the accordion layout set by after-startup-command; 0 is the
-# floating fallback. Other workspaces exist only while they hold windows.
-persistent-workspaces = ['9', '0']
+# 4 and 9 keep their startup accordion layouts. 0 is the floating
+# fallback. Other workspaces exist only while they hold windows.
+persistent-workspaces = ['9', '0', '4']
 
 # Gaps
 gaps.inner.horizontal = 6
